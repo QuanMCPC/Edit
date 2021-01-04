@@ -1,0 +1,1 @@
+electron-packager ./ "Edit Document In Terminal (Native Program)" --app-version="1.0" --icon="icon.ico" --platform="win32" --win32metadata.CompanyName="Quan's Home" --win32metadata.FileDescription="Edit Program is now a native program" --win32metadata.ProductName="Edit Program (Native Program)"
