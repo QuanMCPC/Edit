@@ -1,6 +1,6 @@
 {
   "name": "edit",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Edit Program is now a native program!",
   "main": "index.js",
   "scripts": {
@@ -21,10 +21,8 @@
   "devDependencies": {
     "electron": "^11.1.1",
     "electron-packager": "^15.2.0",
-    "electron-updater": "^4.3.5"
-  },
-  "icon": "./icon.ico",
-  "dependencies": {
+    "electron-updater": "^4.3.5",
     "electron-builder": "^22.9.1"
-  }
+  },
+  "icon": "./icon.ico"
 }
