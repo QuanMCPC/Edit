@@ -268,16 +268,6 @@ const menu = Menu.buildFromTemplate([
                     `)
                 }*/
                 role: "redo"
-            },
-            {
-                label: "Time/Date",
-                accelerator: "F5",
-                click(_menuItem, browserWindow, _event) {
-                    browserWindow.webContents.executeJavaScript(`
-                        var td = new Date();
-                        document.getElementById("editor_input").value += td;
-                    `)
-                }
             }
         ]
     },

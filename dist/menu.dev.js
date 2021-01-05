@@ -117,12 +117,6 @@ var menu = Menu.buildFromTemplate([{
         `)
     }*/
     role: "redo"
-  }, {
-    label: "Time/Date",
-    accelerator: "F5",
-    click: function click(_menuItem, browserWindow, _event) {
-      browserWindow.webContents.executeJavaScript("\n                        var td = new Date();\n                        document.getElementById(\"editor_input\").value += td;\n                    ");
-    }
   }]
 }, {
   label: "Search",

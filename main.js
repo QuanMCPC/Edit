@@ -1,14 +1,3 @@
-document.addEventListener("keydown", function(event) {
-    if (event.keyCode == 78 || event.code == "KeyN") { if (event.altKey) { editor_new(); } }
-    if (event.keyCode == 79 || event.code == "KeyO") { if (event.altKey) { editor_open(); } }
-    if (event.keyCode == 83 || event.code == "KeyS") { if (event.altKey) { editor_save(); } }
-    if (event.keyCode == 46 || event.code == "Escape") { if (event.altKey) { editor_exit(); } }
-    if (event.keyCode == 73 || event.code == "KeyI") { if (event.altKey) { editor_find(); } }
-    if (event.keyCode == 72 || event.code == "KeyH") { if (event.altKey) { editor_replace(); } }
-    if (event.keyCode == 71 || event.code == "KeyG") { if (event.altKey) { editor_gotoline(); } }
-    if (event.keyCode == 76 || event.code == "KeyL") { if (event.altKey) { editor_search_with_google(); } }
-    if (event.keyCode == 84 || event.code == "KeyT") { if (event.altKey) { editor_td_text(); } }
-})
 var start_1 = 0;
 window.count_1 = 0;
 var start_2 = 0;
@@ -20,10 +9,6 @@ var open_window = false;
 var save_window = false;
 function editor_replace_find_replace() {
     window.start_1 = 0; window.start_2 = 0; window.start_3 = 0; window.count_1 = 0; window.count_2 = 0;
-}
-function editor_td_text() {
-    var td = new Date();
-    document.getElementById("editor_input").value += td;
 }
 function editor_cancel_gotoline() {
     let close = document.querySelector("#editor_gotoline");
