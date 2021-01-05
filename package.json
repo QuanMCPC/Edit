@@ -18,7 +18,10 @@
   "homepage": "https://github.com/QuanMCPC/Edit#readme",
   "devDependencies": {
     "electron": "^11.1.1",
-    "electron-packager": "^15.2.0"
+    "electron-packager": "^15.2.0",
+    "electron-updater": "^4.3.5"
   },
-  "icon": "./icon.ico"
+  "icon": "./icon.ico",
+  "build": "electron-builder build --win --publish never",
+  "deploy": "electron-builder build --win --publish always"
 }

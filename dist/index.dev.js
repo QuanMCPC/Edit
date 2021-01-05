@@ -10,6 +10,9 @@ var path = require("path");
 var _require2 = require("./menu"),
     menu = _require2.menu;
 
+var _require3 = require("electron-updater"),
+    autoUpdater = _require3.autoUpdater;
+
 var isWindows = process.platform === "win32";
 app.whenReady().then(function () {
   var myWindow = new BrowserWindow({
@@ -37,4 +40,21 @@ app.whenReady().then(function () {
       });
     }
   });
+  myWindow.once("ready-to-show", function () {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+});
+ipcMain.on('app_version', function (event) {
+  event.sender.send('app_version', {
+    version: app.getVersion()
+  });
+});
+autoUpdater.on('update-available', function () {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', function () {
+  mainWindow.webContents.send('update_downloaded');
+});
+ipcMain.on('restart_app', function () {
+  autoUpdater.quitAndInstall();
 });
