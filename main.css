@@ -5,6 +5,9 @@
     src: url(font/Raleway-ExtraLight.ttf);
     font-display: fallback;
 }
+label, input[type="checkbox"] {
+    font-size: 14px;
+}
 body {
     margin: 0;
     overflow-y: hidden;

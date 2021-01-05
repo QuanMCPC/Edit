@@ -62,18 +62,18 @@
             <div id="editor_overlay" style="position: absolute; display: none; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); z-index: 1;"></div>
             <textarea id="editor_input" style="width: calc(100% - 12px); height: calc(100% - 12px); bottom: 0px; z-index: -1; resize: none; outline: none; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border: 6px double rgb(197, 197, 197); padding: 0; margin: 0;"></textarea>
             <div id="editor_settings" style="z-index: 3; display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 150px; color: white; border: 6px double white">
-                <p style="text-align: center;">Settings</p>
+                <p style="text-align: center; margin-bottom: 3px;">Settings</p>
                 <!--<p style="text-align: center;">Save file as:</p>-->
                 <!--<div style="padding: 3px 3px; position: absolute; left: 50%; top: 50%; border: 4px double white; background-color: black; color: white; transform: translate(-50%, -50%); outline: none">-->
                 <center>
-                    <p style="color: white">Color</p>
-                    <label for="foregroundcolor">Foreground Color: </label><input type="color" name="foregroundcolor" id="foregroundcolor" value="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="backgroundcolor">Background Color: </label><input type="color" name="backgroundcolor" id="backgroundcolor" value="#000000"><br><br>
-                    <button onclick="editor_close_settings()">Close</button>
+                    <p style="color: white; margin: 3px;">Color</p>
+                    <label for="foregroundcolor">Foreground Color: </label><input type="color" name="foregroundcolor" id="foregroundcolor" value="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="backgroundcolor">Background Color: </label><input type="color" name="backgroundcolor" id="backgroundcolor" value="#000000"><br>
+                    <button onclick="editor_close_settings()" style="margin: 10px;">Close</button>
                 </center>
                 <!--</div>-->
             </div>
             <div id="editor_find" style="bottom: 0; right: 0; padding: 5px 5px; z-index: 3; display: none; position: absolute; width: 360px; height: 25px; color: white; border: 6px double white">
-                <label for="editor_find_name" style="text-align: center">Find: </label>
+                <label for="editor_find_name" style="text-align: center;">Find: </label>
                 <input placeholder="Find word" id="editor_find_name" style="outline: none; border: 2px solid gray; width: 80px;">
                 <button onclick="editor_find1()">Find</button><button onclick="editor_cancel_find()">Cancel</button>
                 <input type="checkbox" id="editor_wrap_around"><label for="editor_wrap_around">Wrap Around</label>
@@ -91,27 +91,16 @@
                 <input type="number" placeholder="Number" id="editor_goto_input" style="outline: none; border: 2px solid gray; width: 80px;">
                 <button onclick="editor_goto()">Go to</button><button onclick="editor_cancel_gotoline()">Cancel</button>
             </div>
-            <div id="editor_about" style="z-index: 3; display: none; position: absolute; width: 400px; height: 275px; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: gray; border: 6px double white">
-                <p style="text-align: center">About EDIT (Edit Document In Terminal)</p>
-                <p style="text-align: center">Version: 1.4</p>
-                <p style="text-align: center">Release Date: Friday, 23th 2020</p>
-                <p style="text-align: center">First release: Wednesday, 9th, 2020</p>
-                <p style="text-align: center">Copyright (C) 2020 Quan_MCPC</p>
-                <p style="text-align: center">Source code are free to copy, modify and publish. Just remember to include my Copyright</p>
-                <center>
-                    <button onclick="editor_about_close()">OK</button>
-                </center>
-            </div>
         </div>
     </body>
     <script>
-        document.addEventListener("input", function(event) {
+        document.oninput = function(event) {
             if (cachedText !== document.getElementById("editor_input").value) {
                 document.getElementById("current_state").innerHTML = " (Modified)";
             } else {
                 document.getElementById("current_state").innerHTML = "";
             }
-        })
+        }
         document.getElementById("foregroundcolor").onchange = function(ev) { document.getElementById("editor_input").style.color = ev.target.value }
         document.getElementById("backgroundcolor").onchange = function(ev) { document.getElementById("editor_input").style.backgroundColor = ev.target.value }
     </script>
