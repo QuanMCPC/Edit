@@ -28,7 +28,6 @@ const menu = Menu.buildFromTemplate([
                                             if (error) {
                                                 //alert("An error ocurred writing the file:", error.message)
                                             }
-                                            cachedText = document.getElementById("editor_input").value
                                         })
                                     }).then(function() {
                                         document.getElementById("editor_input").value = "";
@@ -143,7 +142,7 @@ const menu = Menu.buildFromTemplate([
                             document.getElementById("_file_name").innerHTML = fileName.filePath
                             document.getElementById("current_state").innerHTML = "";
                         })
-                        cachedText = document.getElementById("editor_input").val
+                        cachedText = document.getElementById("editor_input").value
                     `)
                 }
             },
