@@ -23,5 +23,8 @@
     "electron-packager": "^15.2.0",
     "electron-updater": "^4.3.5"
   },
-  "icon": "./icon.ico"
+  "icon": "./icon.ico",
+  "dependencies": {
+    "electron-builder": "^22.9.1"
+  }
 }
