@@ -44,25 +44,6 @@
             #close-btn:hover {
                 background: rgb(255, 0, 0);
             }
-            #update {
-                bottom: 0;
-                right: 0;
-                padding: 5px 5px;
-                z-index: 3;
-                display: block;
-                position: absolute;
-                width: 410px;
-                height: 65px;
-                color: white;
-                border: 6px double white
-            }
-            #update * {
-                margin: 0.1px
-            }
-            #update button {
-                margin-left: 4px;
-                margin-right: 4px;
-            }
         </style>
     </head>
     <body>
@@ -111,31 +92,8 @@
                 <button onclick="editor_goto()">Go to</button><button onclick="editor_cancel_gotoline()">Cancel</button>
             </div>
         </div>
-        <div id="update">
-            <p id="message"></p>
-            <button id="close-button" onClick="closeNotification()">Close</button>
-            <button id="restart-button" onClick="restartApp()" class="hidden">Restart</button>
-        </div>
     </body>
     <script>
-        function closeNotification() {
-            notification.classList.add('hidden');
-        }function restartApp() {
-            ipcRenderer.send('restart_app');
-        }
-        const notification = document.getElementById('notification');
-        const message = document.getElementById('message');
-        const restartButton = document.getElementById('restart-button');ipcRenderer.on('update_available', () => {
-            ipcRenderer.removeAllListeners('update_available');
-            message.innerText = 'A new update is available. Downloading now...';
-            notification.classList.remove('hidden');
-        });
-        ipcRenderer.on('update_downloaded', () => {
-            ipcRenderer.removeAllListeners('update_downloaded');
-            message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-            restartButton.classList.remove('hidden');
-            notification.classList.remove('hidden');
-        });
         document.oninput = function(event) {
             if (cachedText !== document.getElementById("editor_input").value) {
                 document.getElementById("current_state").innerHTML = " (Modified)";

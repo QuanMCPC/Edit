@@ -1,12 +1,10 @@
 {
   "name": "edit",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "description": "Edit Program is now a native program!",
   "main": "index.js",
   "scripts": {
-    "test": "electron .",
-    "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build --win --publish always"
+    "test": "electron ."
   },
   "repository": {
     "type": "git",
@@ -20,9 +18,8 @@
   "homepage": "https://github.com/QuanMCPC/Edit#readme",
   "devDependencies": {
     "electron": "^11.1.1",
-    "electron-packager": "^15.2.0",
-    "electron-updater": "^4.3.5",
-    "electron-builder": "^22.9.1"
+    "electron-packager": "^15.2.0"
   },
-  "icon": "./icon.png"
+  "icon": "./icon.ico",
+  "dependencies": {}
 }
