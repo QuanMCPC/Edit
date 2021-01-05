@@ -4,7 +4,9 @@
   "description": "Edit Program is now a native program!",
   "main": "index.js",
   "scripts": {
-    "test": "electron ."
+    "test": "electron .",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
   },
   "repository": {
     "type": "git",
@@ -21,7 +23,5 @@
     "electron-packager": "^15.2.0",
     "electron-updater": "^4.3.5"
   },
-  "icon": "./icon.ico",
-  "build": "electron-builder build --win --publish never",
-  "deploy": "electron-builder build --win --publish always"
+  "icon": "./icon.ico"
 }
