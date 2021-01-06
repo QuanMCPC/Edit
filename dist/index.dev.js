@@ -49,10 +49,10 @@ app.whenReady().then(function () {
     });
   });
   autoUpdater.on('update-available', function () {
-    mainWindow.webContents.send('update_available');
+    myWindow.webContents.send('update_available');
   });
   autoUpdater.on('update-downloaded', function () {
-    mainWindow.webContents.send('update_downloaded');
+    myWindow.webContents.send('update_downloaded');
   });
   ipcMain.on('restart_app', function () {
     autoUpdater.quitAndInstall();

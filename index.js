@@ -36,10 +36,10 @@ app.whenReady().then(() => {
         event.sender.send('app_version', { version: app.getVersion() });
     });
     autoUpdater.on('update-available', () => {
-        mainWindow.webContents.send('update_available');
+        myWindow.webContents.send('update_available');
     });
     autoUpdater.on('update-downloaded', () => {
-        mainWindow.webContents.send('update_downloaded');
+        myWindow.webContents.send('update_downloaded');
     });
     ipcMain.on('restart_app', () => {
         autoUpdater.quitAndInstall();
