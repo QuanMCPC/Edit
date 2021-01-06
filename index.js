@@ -15,7 +15,7 @@ app.whenReady().then(() => {
         frame: isWindows ? false : true,
         minWidth: 320,
         minHeight: 240,
-        icon: "./icon.png"
+        icon: "./icon.ico"
     });
     myWindow.webContents.executeJavaScript(`var cachedText = ""`)
     myWindow.loadFile("index.html")
