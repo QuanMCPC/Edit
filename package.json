@@ -1,0 +1,25 @@
+{
+  "name": "edit",
+  "version": "1.1.0",
+  "description": "Edit Program is now a native program!",
+  "main": "index.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuanMCPC/Edit.git"
+  },
+  "author": "QuanMCPC",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuanMCPC/Edit/issues"
+  },
+  "homepage": "https://github.com/QuanMCPC/Edit#readme",
+  "devDependencies": {
+    "electron": "^11.1.1",
+    "electron-packager": "^15.2.0"
+  },
+  "icon": "./icon.ico",
+  "dependencies": {}
+}
