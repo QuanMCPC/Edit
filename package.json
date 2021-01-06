@@ -1,6 +1,6 @@
 {
   "name": "edit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Edit Program is now a native program!",
   "main": "index.js",
   "scripts": {

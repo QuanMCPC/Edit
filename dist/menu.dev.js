@@ -1,7 +1,8 @@
 "use strict";
 
 var _require = require("electron"),
-    Menu = _require.Menu;
+    Menu = _require.Menu,
+    app = _require.app;
 
 var shell = require("electron").app;
 
@@ -160,7 +161,7 @@ var menu = Menu.buildFromTemplate([{
         type: "info",
         buttons: ["Ok"],
         title: "Info about edit",
-        message: "edit v1.0 (Native Edition)\nVersion: 1.4\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2020 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright"
+        message: "edit v1.2 (Native Edition)\nVersion: ".concat(app.getVersion(), "\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2020 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright")
       });
     }
   }, {
