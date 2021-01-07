@@ -160,7 +160,7 @@ var menu = Menu.buildFromTemplate([{
         type: "info",
         buttons: ["Ok"],
         title: "Info about edit",
-        message: "edit (Native Edition)\nVersion: ".concat(app.getVersion(), "\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2020 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright")
+        message: "edit (Native Edition)\nVersion: ".concat(require("electron").app.getVersion(), "\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2020 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright")
       });
     }
   }, {
