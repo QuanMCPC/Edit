@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { menu } = require("./menu")
 const isWindows = process.platform === "win32";
+require('update-electron-app')()
 app.whenReady().then(() => {
     const myWindow = new BrowserWindow({
         width: 800,
