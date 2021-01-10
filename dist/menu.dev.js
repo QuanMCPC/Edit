@@ -173,6 +173,12 @@ var menu = Menu.buildFromTemplate([{
     click: function click(_menuItem, browserWindow, _event) {
       browserWindow.webContents.executeJavaScript("\n                        var closeSettings = document.getElementById(\"editor_settings\")\n                        closeSettings.style.display = \"block\"\n                        document.querySelector(\"#editor_overlay\").style.display = \"block\";\n                    ");
     }
+  }, {
+    label: "Check for update",
+    click: function click(menuItem, browserWindow, event) {
+      console.log([browserWindow.webContents]); //require("electron").ipcRenderer.send("checkUpdate", document)
+      //browserWindow.webContents.executeJavaScript(``)
+    }
   }]
 }]);
 Menu.setApplicationMenu(menu);

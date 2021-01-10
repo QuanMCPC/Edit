@@ -364,6 +364,14 @@ const menu = Menu.buildFromTemplate([
                         document.querySelector("#editor_overlay").style.display = "block";
                     `)
                 }
+            },
+            {
+                label: "Check for update",
+                click(menuItem, browserWindow, event) {
+                    console.log([browserWindow.webContents])
+                   //require("electron").ipcRenderer.send("checkUpdate", document)
+                   //browserWindow.webContents.executeJavaScript(``)
+                }
             }
         ]
     }
