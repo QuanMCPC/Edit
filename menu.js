@@ -16,6 +16,7 @@ const menu = Menu.buildFromTemplate([
                             document.getElementById("_file_name").innerHTML = "Untitled";
                         } else {
                             require("electron").remote.dialog.showMessageBox(null, {
+                                noLink: true,
                                 type: "question",
                                 buttons: ["Save", "Don't Save", "Cancel"],
                                 defaultId: 0,
@@ -75,6 +76,7 @@ const menu = Menu.buildFromTemplate([
                             });
                         } else {
                             require("electron").remote.dialog.showMessageBox(null, {
+                                noLink: true,
                                 type: "question",
                                 buttons: ["Save", "Don't Save", "Cancel"],
                                 defaultId: 0,
@@ -161,6 +163,7 @@ const menu = Menu.buildFromTemplate([
                             require("electron").remote.getCurrentWindow().close()
                         } else {
                             require("electron").remote.dialog.showMessageBox(null, {
+                                noLink: true,
                                 type: "question",
                                 buttons: ["Save", "Don't Save", "Cancel"],
                                 defaultId: 0,
