@@ -164,7 +164,4 @@ app.whenReady().then(() => {
             })
     }
     checkForUpdate(false)
-    ipcMain.on("checkUpdate", (_data) => {
-        console.log("A")
-    })
 })

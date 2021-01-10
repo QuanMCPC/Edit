@@ -197,7 +197,4 @@ app.whenReady().then(function () {
   }
 
   checkForUpdate(false);
-  ipcMain.on("checkUpdate", function (_data) {
-    console.log("A");
-  });
 });
