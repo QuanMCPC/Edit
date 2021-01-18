@@ -260,7 +260,7 @@ app.whenReady().then(function () {
                   process.exit();
                 });
               });
-            }, 500);
+            }, 1000);
           } else {
             var path3 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit"));
             var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
@@ -271,7 +271,7 @@ app.whenReady().then(function () {
                   process.exit();
                 });
               });
-            }, 500);
+            }, 1000);
           }
         });
         unzip.on("progress", function (fileIndex, fileCount) {

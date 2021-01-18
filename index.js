@@ -222,7 +222,7 @@ app.whenReady().then(() => {
                             require("electron").shell.openPath(`${path1}`).then(() => {
                                 require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
-                        }, 500)
+                        }, 1000)
                     } else {
                         var path3 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit`)
                         var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
@@ -231,7 +231,7 @@ app.whenReady().then(() => {
                             require("electron").shell.openPath(`${path3}`).then(() => {
                                 require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
-                        }, 500)
+                        }, 1000)
                     }
                 })
                 unzip.on("progress", (fileIndex, fileCount) => {
