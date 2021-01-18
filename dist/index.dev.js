@@ -232,7 +232,7 @@ app.whenReady().then(function () {
             setTimeout(function () {
               require("electron").shell.openExternal("".concat(path1)).then(function () {
                 require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                  app.quit();
+                  process.exit();
                 });
               });
             }, 200);
@@ -243,7 +243,7 @@ app.whenReady().then(function () {
             setTimeout(function () {
               require("electron").shell.openExternal("".concat(path3)).then(function () {
                 require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                  app.quit();
+                  process.exit();
                 });
               });
             }, 200);
@@ -319,6 +319,9 @@ app.whenReady().then(function () {
             }
           });
         } else {
+          myWindow.show();
+          myWindow.setAlwaysOnTop(false);
+
           if (userAsked) {
             require("electron").dialog.showMessageBox(null, {
               type: "info",
@@ -331,6 +334,9 @@ app.whenReady().then(function () {
           }
         }
       } else {
+        myWindow.show();
+        myWindow.setAlwaysOnTop(false);
+
         if (userAsked) {
           require("electron").dialog.showMessageBox(null, {
             type: "info",

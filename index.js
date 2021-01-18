@@ -202,7 +202,7 @@ app.whenReady().then(() => {
                         console.log(path1, path2)
                         setTimeout(() => {
                             require("electron").shell.openExternal(`${path1}`).then(() => {
-                                require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { app.quit() })
+                                require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
                         }, 200)
                     } else {
@@ -211,7 +211,7 @@ app.whenReady().then(() => {
                         console.log(path3, path4)
                         setTimeout(() => {
                             require("electron").shell.openExternal(`${path3}`).then(() => {
-                                require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { app.quit() })
+                                require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
                         }, 200)
                     }
@@ -305,6 +305,8 @@ app.whenReady().then(() => {
                             }
                         })
                     } else {
+                        myWindow.show()
+                        myWindow.setAlwaysOnTop(false)
                         if (userAsked) {
                             require("electron").dialog.showMessageBox(null, {
                                 type: "info",
@@ -317,6 +319,8 @@ app.whenReady().then(() => {
                         }
                     }
                 } else {
+                    myWindow.show()
+                    myWindow.setAlwaysOnTop(false)
                     if (userAsked) {
                         require("electron").dialog.showMessageBox(null, {
                             type: "info",
