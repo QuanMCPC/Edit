@@ -16,7 +16,6 @@ const menu = Menu.buildFromTemplate([
                             document.getElementById("_file_name").innerHTML = "Untitled";
                         } else {
                             require("electron").remote.dialog.showMessageBox(null, {
-                                noLink: true,
                                 type: "question",
                                 buttons: ["Save", "Don't Save", "Cancel"],
                                 defaultId: 0,
@@ -24,19 +23,18 @@ const menu = Menu.buildFromTemplate([
                                 message: "You have unsaved file, do you want to save them?"
                             }).then((response) => {
                                 if (response.response == 0) {
-                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileName) => {
-                                        return fileName.canceled
-                                        require("fs").writeFile(fileName.filePath, document.getElementById("editor_input").value, (error) => {
-                                            if (error) {
-                                                //alert("An error ocurred writing the file:", error.message)
-                                            }
-                                        })
-                                    }).then(function(response) {
-                                        if (!response) {
-                                            document.getElementById("editor_input").value = "";
-                                            cachedText = document.getElementById("editor_input").value
-                                            document.getElementById("current_state").innerHTML = "";
-                                            document.getElementById("_file_name").innerHTML = "Untitled";
+                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileNames) => {
+                                        if (!fileNames.canceled) {
+                                            require("fs").writeFile(fileNames.filePath, document.getElementById("editor_input").value, (error) => {
+                                                if (error) {
+                                                    //alert("An error ocurred writing the file:", error.message)
+                                                } else {
+                                                    document.getElementById("editor_input").value = "";
+                                                    cachedText = document.getElementById("editor_input").value
+                                                    document.getElementById("current_state").innerHTML = "";
+                                                    document.getElementById("_file_name").innerHTML = "Untitled";
+                                                }
+                                            })
                                         }
                                     })
                                 } else if (response.response == 1) {
@@ -61,67 +59,12 @@ const menu = Menu.buildFromTemplate([
                                 if(fileNames === undefined){
                                     console.log("No file selected");
                                     throw new Error()
-                                }
-                                require("fs").readFile(fileNames.filePaths[0], 'utf-8', (err, data) => {
-                                    if(err){
-                                        //alert("An error ocurred reading the file:" + err.message);
-                                        return;
-                                    } else {
-                                        document.getElementById("editor_input").value = data
-                                        cachedText = document.getElementById("editor_input").value
-                                        document.getElementById("_file_name").innerHTML = fileNames.filePaths[0]
-                                        document.getElementById("current_state").innerHTML = "";
-                                    }
-                                });
-                            });
-                        } else {
-                            require("electron").remote.dialog.showMessageBox(null, {
-                                noLink: true,
-                                type: "question",
-                                buttons: ["Save", "Don't Save", "Cancel"],
-                                defaultId: 0,
-                                title: "edit - Unsaved File",
-                                message: "You have unsaved file, do you want to save them?"
-                            }).then((response) => {
-                                if (response.response == 0) {
-                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileName) => {
-                                        return fileName.canceled;
-                                        require("fs").writeFile(fileName.filePath, document.getElementById("editor_input").value, (error) => {
-                                            if (error) {
-                                                //alert("An error ocurred writing the file:", error.message)
-                                            } else {
-                                                cachedText = document.getElementById("editor_input").value
-                                            }
-                                        })
-                                    }).then(function(response) {
-                                        if (!response) {
-                                            require("electron").remote.dialog.showOpenDialog(null, {title: "Open File", buttonLabel: "Load file"}).then((fileNames) => {
-                                                // fileNames is an array that contains all the selected
-                                                if(fileNames === undefined){
-                                                    console.log("No file selected");
-                                                }
-                                                require("fs").readFile(fileNames.filePaths[0], 'utf-8', (err, data) => {
-                                                    if(err){
-                                                        //alert("An error ocurred reading the file:" + err.message);
-                                                    } else {
-                                                        document.getElementById("editor_input").value = data
-                                                        cachedText = data
-                                                        document.getElementById("_file_name").innerHTML = fileNames.filePaths[0]
-                                                        document.getElementById("current_state").innerHTML = "";
-                                                    }
-                                                });
-                                            });
-                                        }
-                                    })
-                                } else if (response.response == 1) {
-                                    require("electron").remote.dialog.showOpenDialog(null, {title: "Open File", buttonLabel: "Load file"}).then((fileNames) => {
-                                        // fileNames is an array that contains all the selected
-                                        if(fileNames === undefined){
-                                            console.log("No file selected");
-                                        }
+                                } else {
+                                    if (!fileNames.canceled) {
                                         require("fs").readFile(fileNames.filePaths[0], 'utf-8', (err, data) => {
                                             if(err){
                                                 //alert("An error ocurred reading the file:" + err.message);
+                                                return;
                                             } else {
                                                 document.getElementById("editor_input").value = data
                                                 cachedText = document.getElementById("editor_input").value
@@ -129,6 +72,67 @@ const menu = Menu.buildFromTemplate([
                                                 document.getElementById("current_state").innerHTML = "";
                                             }
                                         });
+                                    }
+                                }
+                            });
+                        } else {
+                            require("electron").remote.dialog.showMessageBox(null, {
+                                type: "question",
+                                buttons: ["Save", "Don't Save", "Cancel"],
+                                defaultId: 0,
+                                title: "edit - Unsaved File",
+                                message: "You have unsaved file, do you want to save them?"
+                            }).then((response) => {
+                                if (response.response == 0) {
+                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileNames) => {
+                                        if (!fileNames.canceled) {
+                                            require("fs").writeFile(fileNames.filePath, document.getElementById("editor_input").value, (error) => {
+                                                if (error) {
+                                                    //alert("An error ocurred writing the file:", error.message)
+                                                } else {
+                                                    cachedText = document.getElementById("editor_input").value
+                                                    require("electron").remote.dialog.showOpenDialog(null, {title: "Open File", buttonLabel: "Load file"}).then((fileNames) => {
+                                                        // fileNames is an array that contains all the selected
+                                                        if(fileNames === undefined){
+                                                            console.log("No file selected");
+                                                        } else {
+                                                            if (!fileNames.canceled) {
+                                                                require("fs").readFile(fileNames.filePaths[0], 'utf-8', (err, data) => {
+                                                                    if(err){
+                                                                        //alert("An error ocurred reading the file:" + err.message);
+                                                                    } else {
+                                                                        document.getElementById("editor_input").value = data
+                                                                        cachedText = data
+                                                                        document.getElementById("_file_name").innerHTML = fileNames.filePaths[0]
+                                                                        document.getElementById("current_state").innerHTML = "";
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    })
+                                } else if (response.response == 1) {
+                                    require("electron").remote.dialog.showOpenDialog(null, {title: "Open File", buttonLabel: "Load file"}).then((fileNames) => {
+                                        // fileNames is an array that contains all the selected
+                                        if(fileNames === undefined) {
+                                            console.log("No file selected");
+                                        } else {
+                                            if (!fileNames.canceled) {
+                                                require("fs").readFile(fileNames.filePaths[0], 'utf-8', (err, data) => {
+                                                    if(err){
+                                                        //alert("An error ocurred reading the file:" + err.message);
+                                                    } else {
+                                                        document.getElementById("editor_input").value = data
+                                                        cachedText = document.getElementById("editor_input").value
+                                                        document.getElementById("_file_name").innerHTML = fileNames.filePaths[0]
+                                                        document.getElementById("current_state").innerHTML = "";
+                                                    }
+                                                });
+                                            }
+                                        }
                                     });
                                 }
                             })
@@ -141,16 +145,18 @@ const menu = Menu.buildFromTemplate([
                 accelerator: "Ctrl+S",
                 click(_menuItem, browserWindow, _event) {
                     browserWindow.webContents.executeJavaScript(`
-                        require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileName) => {
-                            require("fs").writeFile(fileName.filePath, document.getElementById("editor_input").value, (error) => {
-                                if (error) {
-                                    //alert("An error ocurred writing the file:", error.message)
-                                } else {
-                                    document.getElementById("_file_name").innerHTML = fileName.filePath
-                                    document.getElementById("current_state").innerHTML = "";
-                                    cachedText = document.getElementById("editor_input").value
-                                }
-                            })
+                        require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileNames) => {
+                            if (!fileNames.canceled) {
+                                require("fs").writeFile(fileNames.filePath, document.getElementById("editor_input").value, (error) => {
+                                    if (error) {
+                                        //alert("An error ocurred writing the file:", error.message)
+                                    } else {
+                                        document.getElementById("_file_name").innerHTML = fileNames.filePath
+                                        document.getElementById("current_state").innerHTML = "";
+                                        cachedText = document.getElementById("editor_input").value
+                                    }
+                                })
+                            }
                         })
                     `)
                 }
@@ -163,7 +169,6 @@ const menu = Menu.buildFromTemplate([
                             require("electron").remote.getCurrentWindow().close()
                         } else {
                             require("electron").remote.dialog.showMessageBox(null, {
-                                noLink: true,
                                 type: "question",
                                 buttons: ["Save", "Don't Save", "Cancel"],
                                 defaultId: 0,
@@ -171,16 +176,17 @@ const menu = Menu.buildFromTemplate([
                                 message: "You have unsaved file, do you want to save them?"
                             }).then((response) => {
                                 if (response.response == 0) {
-                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileName) => {
-                                        require("fs").writeFile(fileName.filePath, document.getElementById("editor_input").value, (error) => {
-                                            if (error) {
-                                                //alert("An error ocurred writing the file:", error.message)
-                                            } else {
-                                                cachedText = document.getElementById("editor_input").value
-                                            }
-                                        })
-                                    }).then(function() {
-                                        require("electron").remote.getCurrentWindow().close()
+                                    require("electron").remote.dialog.showSaveDialog(null, {title: "Save File", buttonLabel: "Save file", defaultPath: "default.txt"}).then((fileNames) => {
+                                        if (!fileNames.canceled) {
+                                            require("fs").writeFile(fileNames.filePath, document.getElementById("editor_input").value, (error) => {
+                                                if (error) {
+                                                    //alert("An error ocurred writing the file:", error.message)
+                                                } else {
+                                                    cachedText = document.getElementById("editor_input").value
+                                                    require("electron").remote.getCurrentWindow().close()
+                                                }
+                                            })
+                                        }
                                     })
                                 } else if (response.response == 1) {
                                     require("electron").remote.getCurrentWindow().close()
