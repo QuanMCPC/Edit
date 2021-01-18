@@ -219,19 +219,19 @@ app.whenReady().then(() => {
                         var path2 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
                         console.log(path1, path2)
                         setTimeout(() => {
-                            require("electron").shell.openExternal(`${path1}`).then(() => {
+                            require("electron").shell.openPath(`${path1}`).then(() => {
                                 require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
-                        }, 200)
+                        }, 500)
                     } else {
                         var path3 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit`)
                         var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
                         console.log(path3, path4)
                         setTimeout(() => {
-                            require("electron").shell.openExternal(`${path3}`).then(() => {
+                            require("electron").shell.openPath(`${path3}`).then(() => {
                                 require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                             })
-                        }, 200)
+                        }, 500)
                     }
                 })
                 unzip.on("progress", (fileIndex, fileCount) => {

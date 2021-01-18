@@ -255,23 +255,23 @@ app.whenReady().then(function () {
             var path2 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
             console.log(path1, path2);
             setTimeout(function () {
-              require("electron").shell.openExternal("".concat(path1)).then(function () {
+              require("electron").shell.openPath("".concat(path1)).then(function () {
                 require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
                   process.exit();
                 });
               });
-            }, 200);
+            }, 500);
           } else {
             var path3 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit"));
             var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
             console.log(path3, path4);
             setTimeout(function () {
-              require("electron").shell.openExternal("".concat(path3)).then(function () {
+              require("electron").shell.openPath("".concat(path3)).then(function () {
                 require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
                   process.exit();
                 });
               });
-            }, 200);
+            }, 500);
           }
         });
         unzip.on("progress", function (fileIndex, fileCount) {
