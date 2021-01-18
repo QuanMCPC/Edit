@@ -9,6 +9,8 @@ var _require = require("electron"),
 
 var path = require("path");
 
+var fs = require("fs");
+
 var _require2 = require("./menu"),
     menu = _require2.menu;
 
@@ -22,22 +24,45 @@ var updateFinished = false,
     global_data_,
     updateOnStartup = true;
 app.whenReady().then(function () {
-  if (require("fs").existsSync(path.normalize(process.execPath + "/.." + "continue-update.edit_file"))) {
-    require("fs").readFile(path.normalize(process.execPath + "/.." + "continue-update.edit_file"), function (_err, data) {
-      require("fs-extra").remove(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data))).then(function () {
-        require("fs-extra").remove(path.normalize(process.execPath + "/../continue-update.edit_file")).then(function () {
-          require("electron").dialog.showMessageBox(new BrowserWindow({
-            show: false,
-            alwaysOnTop: true
-          }), {
-            noLink: true,
-            type: "info",
-            title: "edit - Update finished",
-            message: "The update installed sucessfully!"
-          }).then(function () {
-            updateFinished = true;
-          });
-        });
+  var deleteFolderRecursive = function deleteFolderRecursive(path) {
+    if (fs.existsSync(path)) {
+      fs.readdirSync(path).forEach(function (file, index) {
+        var curPath = require("path").join(path, file);
+
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // recurse
+          deleteFolderRecursive(curPath);
+        } else {
+          // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+    }
+  }; //console.log(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))
+
+
+  if (fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))) {
+    //console.log("Layer 1")
+    fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
+      encoding: "utf-8"
+    }, function (_err, data) {
+      //console.log("Layer 2")
+      //fs.rm((path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`)), { recursive: true })
+      deleteFolderRecursive(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data))); //console.log("Layer 3")
+
+      fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file")); //console.log("Layer 4")
+
+      require("electron").dialog.showMessageBox(new BrowserWindow({
+        show: false,
+        alwaysOnTop: true
+      }), {
+        noLink: true,
+        type: "info",
+        title: "edit - Update finished",
+        message: "The update installed sucessfully!"
+      }).then(function () {
+        updateFinished = true;
       });
     });
   }
