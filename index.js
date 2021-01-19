@@ -10,19 +10,21 @@ var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
     if ((fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file")))) {
         fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {encoding: "utf-8"}, (_err, data) => {
-            del(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`).replace(/\\/g, "/"), {  }).then(() => {
+            del(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}/`).replace(/\\/g, "/"), {  }).then(() => {
                 //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-                fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-                require("electron").dialog.showMessageBox(new BrowserWindow({
-                    show: false,
-                    alwaysOnTop: true
-                }), {
-                    noLink: true,
-                    type: "info",
-                    title: "edit - Update finished",
-                    message: "The update installed sucessfully!"
-                }).then(() => {
-                    updateFinished = true
+                del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(() => {
+                    //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
+                    require("electron").dialog.showMessageBox(new BrowserWindow({
+                        show: false,
+                        alwaysOnTop: true
+                    }), {
+                        noLink: true,
+                        type: "info",
+                        title: "edit - Update finished",
+                        message: "The update installed sucessfully!"
+                    }).then(() => {
+                        updateFinished = true
+                    })
                 })
             })
         })
@@ -191,32 +193,34 @@ app.whenReady().then(() => {
                     var versionNumber = "";
                     var data_ = global_data_
                     versionNumber = data_[0].tag_name.replace("v", "");
-                    require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
-                        if (err) {
-                            //myWindow.webContents.executeJavaScript(`console.log("${err}")`)
+                    del(item.getSavePath().replace(/\\/g, "/")).then(() => {
+                        if (os == "win32") {
+                            var path1 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit.exe`)
+                            var path2 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
+                            console.log(path1, path2)
+                            setTimeout(() => {
+                                require("electron").shell.openPath(`${path1}`).then(() => {
+                                    require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
+                                })
+                            }, 1000)
+                        } else {
+                            var path3 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit`)
+                            var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
+                            console.log(path3, path4)
+                            setTimeout(() => {
+                                require("electron").shell.openPath(`${path3}`).then(() => {
+                                    require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
+                                })
+                            }, 1000)
                         }
                     })
-                   // myWindow.webContents.executeJavaScript(`console.log("${app.getAppPath()}", "${path.normalize(process.execPath + "/..")}")`)
+                    // require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
+                    //     if (err) {
+                    //         //myWindow.webContents.executeJavaScript(`console.log("${err}")`)
+                    //     }
+                    // })
+                    // myWindow.webContents.executeJavaScript(`console.log("${app.getAppPath()}", "${path.normalize(process.execPath + "/..")}")`)
                     //myWindow.focus()
-                    if (os == "win32") {
-                        var path1 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit.exe`)
-                        var path2 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
-                        console.log(path1, path2)
-                        setTimeout(() => {
-                            require("electron").shell.openPath(`${path1}`).then(() => {
-                                require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
-                            })
-                        }, 1000)
-                    } else {
-                        var path3 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit`)
-                        var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
-                        console.log(path3, path4)
-                        setTimeout(() => {
-                            require("electron").shell.openPath(`${path3}`).then(() => {
-                                require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
-                            })
-                        }, 1000)
-                    }
                 })
                 unzip.on("progress", (fileIndex, fileCount) => {
                     progressBar1.value = ((fileIndex + 1) / fileCount * 100)

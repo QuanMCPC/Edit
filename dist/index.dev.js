@@ -30,20 +30,21 @@ app.whenReady().then(function () {
     fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
       encoding: "utf-8"
     }, function (_err, data) {
-      del(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data)).replace(/\\/g, "/"), {}).then(function () {
+      del(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data, "/")).replace(/\\/g, "/"), {}).then(function () {
         //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-        fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"));
-
-        require("electron").dialog.showMessageBox(new BrowserWindow({
-          show: false,
-          alwaysOnTop: true
-        }), {
-          noLink: true,
-          type: "info",
-          title: "edit - Update finished",
-          message: "The update installed sucessfully!"
-        }).then(function () {
-          updateFinished = true;
+        del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(function () {
+          //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
+          require("electron").dialog.showMessageBox(new BrowserWindow({
+            show: false,
+            alwaysOnTop: true
+          }), {
+            noLink: true,
+            type: "info",
+            title: "edit - Update finished",
+            message: "The update installed sucessfully!"
+          }).then(function () {
+            updateFinished = true;
+          });
         });
       });
     });
@@ -224,37 +225,37 @@ app.whenReady().then(function () {
           var versionNumber = "";
           var data_ = global_data_;
           versionNumber = data_[0].tag_name.replace("v", "");
-
-          require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), function (err) {
-            if (err) {//myWindow.webContents.executeJavaScript(`console.log("${err}")`)
+          del(item.getSavePath().replace(/\\/g, "/")).then(function () {
+            if (os == "win32") {
+              var path1 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit.exe"));
+              var path2 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
+              console.log(path1, path2);
+              setTimeout(function () {
+                require("electron").shell.openPath("".concat(path1)).then(function () {
+                  require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
+                    process.exit();
+                  });
+                });
+              }, 1000);
+            } else {
+              var path3 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit"));
+              var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
+              console.log(path3, path4);
+              setTimeout(function () {
+                require("electron").shell.openPath("".concat(path3)).then(function () {
+                  require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
+                    process.exit();
+                  });
+                });
+              }, 1000);
             }
-          }); // myWindow.webContents.executeJavaScript(`console.log("${app.getAppPath()}", "${path.normalize(process.execPath + "/..")}")`)
+          }); // require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
+          //     if (err) {
+          //         //myWindow.webContents.executeJavaScript(`console.log("${err}")`)
+          //     }
+          // })
+          // myWindow.webContents.executeJavaScript(`console.log("${app.getAppPath()}", "${path.normalize(process.execPath + "/..")}")`)
           //myWindow.focus()
-
-
-          if (os == "win32") {
-            var path1 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit.exe"));
-            var path2 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
-            console.log(path1, path2);
-            setTimeout(function () {
-              require("electron").shell.openPath("".concat(path1)).then(function () {
-                require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                  process.exit();
-                });
-              });
-            }, 1000);
-          } else {
-            var path3 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit"));
-            var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
-            console.log(path3, path4);
-            setTimeout(function () {
-              require("electron").shell.openPath("".concat(path3)).then(function () {
-                require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                  process.exit();
-                });
-              });
-            }, 1000);
-          }
         });
         unzip.on("progress", function (fileIndex, fileCount) {
           progressBar1.value = (fileIndex + 1) / fileCount * 100;
