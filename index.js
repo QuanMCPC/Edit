@@ -7,29 +7,10 @@ const DZip = require("decompress-zip");
 const ProgressBar = require('electron-progressbar');
 var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
-    const deleteFolderRecursive = function(path) {
-        if (fs.existsSync(path)) {
-            fs.readdirSync(path).forEach((file, index) => {
-                const curPath = require("path").join(path, file);
-                if (fs.lstatSync(curPath).isDirectory()) { // recurse
-                    deleteFolderRecursive(curPath);
-                } else { // delete file
-                    fs.unlinkSync(curPath);
-                }
-            });
-            fs.rmdirSync(path);
-        }
-    };
-    //console.log(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))
     if ((fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file")))) {
-        //console.log("Layer 1")
         fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {encoding: "utf-8"}, (_err, data) => {
-            //console.log("Layer 2")
-            //fs.rm((path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`)), { recursive: true })
-            deleteFolderRecursive(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`))
-            //console.log("Layer 3")
+            fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
             fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-            //console.log("Layer 4")
             require("electron").dialog.showMessageBox(new BrowserWindow({
                 show: false,
                 alwaysOnTop: true
