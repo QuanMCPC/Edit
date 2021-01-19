@@ -26,30 +26,6 @@ var updateFinished = false,
     global_data_,
     updateOnStartup = true;
 app.whenReady().then(function () {
-  if (fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))) {
-    fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
-      encoding: "utf-8"
-    }, function (_err, data) {
-      del(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data, "/")).replace(/\\/g, "/"), {}).then(function () {
-        //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-        del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(function () {
-          //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-          require("electron").dialog.showMessageBox(new BrowserWindow({
-            show: false,
-            alwaysOnTop: true
-          }), {
-            noLink: true,
-            type: "info",
-            title: "edit - Update finished",
-            message: "The update installed sucessfully!"
-          }).then(function () {
-            updateFinished = true;
-          });
-        });
-      });
-    });
-  }
-
   var myWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -231,7 +207,7 @@ app.whenReady().then(function () {
               var path2 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
               console.log(path1, path2);
               setTimeout(function () {
-                require("electron").shell.openPath("".concat(path1)).then(function () {
+                require("electron").shell.openExternal("".concat(path1)).then(function () {
                   require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
                     process.exit();
                   });
@@ -242,7 +218,7 @@ app.whenReady().then(function () {
               var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
               console.log(path3, path4);
               setTimeout(function () {
-                require("electron").shell.openPath("".concat(path3)).then(function () {
+                require("electron").shell.openExternal("".concat(path3)).then(function () {
                   require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
                     process.exit();
                   });

@@ -8,27 +8,6 @@ const ProgressBar = require('electron-progressbar');
 const del = require("del")
 var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
-    if ((fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file")))) {
-        fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {encoding: "utf-8"}, (_err, data) => {
-            del(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}/`).replace(/\\/g, "/"), {  }).then(() => {
-                //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-                del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(() => {
-                    //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-                    require("electron").dialog.showMessageBox(new BrowserWindow({
-                        show: false,
-                        alwaysOnTop: true
-                    }), {
-                        noLink: true,
-                        type: "info",
-                        title: "edit - Update finished",
-                        message: "The update installed sucessfully!"
-                    }).then(() => {
-                        updateFinished = true
-                    })
-                })
-            })
-        })
-    }
     const myWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -199,7 +178,7 @@ app.whenReady().then(() => {
                             var path2 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
                             console.log(path1, path2)
                             setTimeout(() => {
-                                require("electron").shell.openPath(`${path1}`).then(() => {
+                                require("electron").shell.openExternal(`${path1}`).then(() => {
                                     require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                                 })
                             }, 1000)
@@ -208,7 +187,7 @@ app.whenReady().then(() => {
                             var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
                             console.log(path3, path4)
                             setTimeout(() => {
-                                require("electron").shell.openPath(`${path3}`).then(() => {
+                                require("electron").shell.openExternal(`${path3}`).then(() => {
                                     require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
                                 })
                             }, 1000)
