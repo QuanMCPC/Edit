@@ -5,22 +5,25 @@ const { menu } = require("./menu");
 const isWindows = process.platform === "win32";
 const DZip = require("decompress-zip");
 const ProgressBar = require('electron-progressbar');
+const del = require("del")
 var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
     if ((fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file")))) {
         fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {encoding: "utf-8"}, (_err, data) => {
-            fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-            fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-            require("electron").dialog.showMessageBox(new BrowserWindow({
-                show: false,
-                alwaysOnTop: true
-            }), {
-                noLink: true,
-                type: "info",
-                title: "edit - Update finished",
-                message: "The update installed sucessfully!"
-            }).then(() => {
-                updateFinished = true
+            del(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`).replace(/\\/g, "/"), {  }).then(() => {
+                //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
+                fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
+                require("electron").dialog.showMessageBox(new BrowserWindow({
+                    show: false,
+                    alwaysOnTop: true
+                }), {
+                    noLink: true,
+                    type: "info",
+                    title: "edit - Update finished",
+                    message: "The update installed sucessfully!"
+                }).then(() => {
+                    updateFinished = true
+                })
             })
         })
     }

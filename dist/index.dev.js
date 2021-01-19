@@ -20,6 +20,8 @@ var DZip = require("decompress-zip");
 
 var ProgressBar = require('electron-progressbar');
 
+var del = require("del");
+
 var updateFinished = false,
     global_data_,
     updateOnStartup = true;
@@ -28,21 +30,21 @@ app.whenReady().then(function () {
     fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
       encoding: "utf-8"
     }, function (_err, data) {
-      fs.rmdirSync(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data)), {
-        recursive: true
-      });
-      fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"));
+      del(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data)).replace(/\\/g, "/"), {}).then(function () {
+        //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
+        fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"));
 
-      require("electron").dialog.showMessageBox(new BrowserWindow({
-        show: false,
-        alwaysOnTop: true
-      }), {
-        noLink: true,
-        type: "info",
-        title: "edit - Update finished",
-        message: "The update installed sucessfully!"
-      }).then(function () {
-        updateFinished = true;
+        require("electron").dialog.showMessageBox(new BrowserWindow({
+          show: false,
+          alwaysOnTop: true
+        }), {
+          noLink: true,
+          type: "info",
+          title: "edit - Update finished",
+          message: "The update installed sucessfully!"
+        }).then(function () {
+          updateFinished = true;
+        });
       });
     });
   }
