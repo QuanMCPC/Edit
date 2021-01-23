@@ -1,3 +1,4 @@
+<!--Copyright (C) 2020 QuanMCPC (Also know as: Quan_MCPC)-->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -94,13 +95,13 @@
         </div>
     </body>
     <script>
-        document.oninput = function(event) {
+        document.getElementById("editor_input").addEventListener("keydown", (event) => {
             if (cachedText !== document.getElementById("editor_input").value) {
                 document.getElementById("current_state").innerHTML = " (Modified)";
             } else {
                 document.getElementById("current_state").innerHTML = "";
             }
-        }
+        })
         document.getElementById("foregroundcolor").onchange = function(ev) { document.getElementById("editor_input").style.color = ev.target.value }
         document.getElementById("backgroundcolor").onchange = function(ev) { document.getElementById("editor_input").style.backgroundColor = ev.target.value }
     </script>

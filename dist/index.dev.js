@@ -28,6 +28,7 @@ var updateFinished = false,
 app.whenReady().then(function () {
   function update_Phrase_2() {
     if (fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))) {
+      console.log("If you can see this message, please change the directory to somewhere else if the current one is in the old version's folder");
       fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
         encoding: "utf-8"
       }, function (_err, data) {
@@ -100,8 +101,23 @@ app.whenReady().then(function () {
       myWindow.setAlwaysOnTop(false);
       myWindow.show();
       updateFinished = false;
-    } //console.log(value)
+    }
 
+    myWindow.webContents.executeJavaScript("var cachedText = \"\"");
+    myWindow.loadFile("index.html");
+    ipcMain.on("display-app-menu", function (_e, args) {
+      if (isWindows && myWindow) {
+        menu.items[3].submenu.items[3].click = function () {
+          checkForUpdate(true);
+        };
+
+        menu.popup({
+          window: myWindow,
+          x: args.x,
+          y: args.y
+        });
+      }
+    }); //console.log(value)
 
     if (app.commandLine.hasSwitch("file") || app.commandLine.hasSwitch("f")) {
       if (app.commandLine.hasSwitch("version") || app.commandLine.hasSwitch("v")) {
@@ -176,26 +192,24 @@ app.whenReady().then(function () {
     }
 
     if (app.commandLine.hasSwitch("help") || app.commandLine.hasSwitch("h")) {
-      console.log("==================================\nedit version ".concat(app.getVersion(), " - Help page\n------------------------------\nUsage: edit <switch>\n--file=<directory_of_file> or --f=<directory_of_file>: Load the file into edit\n--no-update-on-startup or --n: Prevent edit from checking update on startup, require user to manually check for update\n--unresizable or --u: Make the edit window unresizable\n--size=<width>,<height> or --s=<width>,<height>: Load edit with the specify width and height.\nIf the width or height is smaller then the minimal width (320) or minimal height (240), the minimal width/height will be set to the width/height you specify\n--version or --v: Display the version of edit\n--help or --h: Display the help page\n=================================="));
+      console.log("==================================\nedit version ".concat(app.getVersion(), " - Help page\n------------------------------\nUsage: edit <switch>\n--file=<directory_of_file> or --f=<directory_of_file>: Load the file into edit\n--no-update-on-startup or --n: Prevent edit from checking update on startup, require user to manually check for update\n--unresizable or --u: Make the edit window unresizable\n--size=<width>,<height> or --s=<width>,<height>: Load edit with the specify width and height.\nIf the width or height is smaller then the minimal width (320) or minimal height (240), the minimal width/height will be set to the width/height you specify\n--version or --v: Display the version of edit\n--help or --h: Display the help page\n--ghostTyping=\"<message>\",<speed> or --g=\"<message>\",<speed>: Ghost-typing a text into edit. Replace the <message> with the message you want ghost typing and <speed> with the delay between each character\n=================================="));
       process.exit();
+    }
+
+    if (app.commandLine.hasSwitch("ghostTyping") || app.commandLine.hasSwitch("g")) {
+      if (app.commandLine.hasSwitch("version") || app.commandLine.hasSwitch("v")) {
+        console.log("Warning: --version or --v is not allow with other switches");
+      } else if (app.commandLine.hasSwitch("help") || app.commandLine.hasSwitch("h")) {
+        console.log("Warning: --help or --h is not allowed with other switches");
+      } else {
+        var message_gT = app.commandLine.getSwitchValue("ghostTyping").split(",")[0] ? app.commandLine.getSwitchValue("ghostTyping").split(",")[0] : app.commandLine.getSwitchValue("g").split(",")[0];
+        var speed_gT = app.commandLine.getSwitchValue("ghostTyping").split(",")[1] ? app.commandLine.getSwitchValue("ghostTyping").split(",")[1] : app.commandLine.getSwitchValue("g").split(",")[1];
+        console.log(message_gT, speed_gT);
+        myWindow.webContents.executeJavaScript("\n                    function ghost_typing(input = \"\", id = \"\", delay = 1000) {\n                        var start = 0;\n                        var input = [...input]\n                        console.log(input)\n                        var inter = setInterval(() => {\n                            document.getElementById(id).value += input[start]\n                            start++\n                            if (start >= input.length) {\n                                clearInterval(inter)\n                            }\n                        }, delay)\n                    }\n                    ghost_typing(\"".concat(message_gT, "\", \"editor_input\", ").concat(speed_gT, ")\n                "));
+      }
     } //myWindow.webContents.executeJavaScript(`console.log("${path.normalize(process.execPath + "/..")}")`)
 
 
-    myWindow.webContents.executeJavaScript("var cachedText = \"\"");
-    myWindow.loadFile("index.html");
-    ipcMain.on("display-app-menu", function (_e, args) {
-      if (isWindows && myWindow) {
-        menu.items[3].submenu.items[3].click = function () {
-          checkForUpdate(true);
-        };
-
-        menu.popup({
-          window: myWindow,
-          x: args.x,
-          y: args.y
-        });
-      }
-    });
     var version = 0;
 
     var fetch = require("electron-fetch")["default"];
