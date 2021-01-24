@@ -1,16 +1,21 @@
 # edit (Also know as Edit Document In Terminal)
-### I. Intro
-edit is a basic text editor started from a small project for a larger project (Large project called: Console). Before, the text editor was only a web application, take over 100 hours to finish and havegone though 4 versions total. Because if this, the source code for the text editor has beencompacted to a JavaScript file for other to setup and use. And now, edit has now become a nativeapplication.
-### II. How to...
-#### II.1. ...download the program?
-Go to releases, select the version that you want to download then download: edit-win32-{version}.zip(For Windows) or edit-linux-{version}.zip
-#### II.2. ...run the program?
-Extract the zip file, open the folder: edit-win32-{version} (edit-linux-{version}) that should be there after extract the zip then just run: edit.exe (Windows) or  edit (Linux)
-#### II.3. ...download the source to view, edit, test run or compile?
-Download the source by go to Code -> Download zip or if you want: Clone the repository
-If you do want to test run or compile, you will need to install electron (For test run) andelectron-packager, electron-builder or electron-forge (For compile) into the same directory of the source and the following package that edit use: decompress-zip, electron-fetch, electron-progressbar and fs-extra
-### III. Information
- - Build on Electron version 11.1.1
- - Completed and compiled on Monday, 4th 2021
- - Currently only build for Windows and Linux
-### That's it
+### Started as a small program in `console`, it's now a native program that in executable in Windows and Linux.
+___
+## Orgin (Not orgin of Microsoft edit)
+> It started out as an idea in my mind when I'm still developing the console. `Seeing a native text editor in a lot of operating system, I should develop my own native text editor for console` - I think. So I start develop, and after a lot of error, a lot of bug. I offically release edit on `Friday, 23rd 2020`.
+## In a JS file
+> After that, `What if people want to include edit in other website?` - I question my self. So I bundled edit into a JavaScript file that you can include in the HTML file and download [`here`](https://raw.githubusercontent.com/QuanMCPC/QuanMCPC.github.io/master/other_project/Edit_For_Other_Website.js)
+## As a program
+> And then, I found out about [`Electron`](https://electronjs.org) and [`NodeJS`](https://nodejs.org/) that allow people to make program using HTML, CSS and JS but with more control then ever. So with a lot more code and some modification, I have able to make edit an offical program.
+## Thing edit can do
+ - Includes all features in Windows's notepad
+ - Has a theme changer (Very basic)
+ - Check for update
+## Thing edit can't do
+ - Auto-complete code
+ - Fancy text formatting
+ - Source Control build-in
+ - Bake a cake
+### Have fun using edit!
+___
+Copyright &copy; 2020 QuanMCPC (Also know has Quan_MCPC)
