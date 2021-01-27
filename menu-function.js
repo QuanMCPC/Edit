@@ -2,6 +2,9 @@ const { remote, ipcRenderer } = require("electron");
 function _getCurrentWindow() {
     return remote.getCurrentWindow();
 }
+function close_settings(browserWindow = _getCurrentWindow()) {
+    browserWindow.close()
+}
 function openMenu(x, y) {
     ipcRenderer.send(`display-app-menu`, { x, y });
 }
@@ -47,9 +50,15 @@ function closeWindow(browserWindow = _getCurrentWindow()) {
                             cachedText = document.getElementById("editor_input").value
                         })
                     }).then(function() {
+                        var a_ = require("node-localstorage").LocalStorage;
+                        var localStorage_ = new a_("autoRecovery")
+                        localStorage_.removeItem("autoRecoveryContent")
                         require("electron").remote.getCurrentWindow().close()
                     })
                 } else if (response.response == 1) {
+                    var a_ = require("node-localstorage").LocalStorage;
+                    var localStorage_ = new a_("autoRecovery")
+                    localStorage_.removeItem("autoRecoveryContent")
                     require("electron").remote.getCurrentWindow().close()
                 }
             })
@@ -67,5 +76,6 @@ module.exports = {
     unmaximizeWindow,
     maxUnmaxWindow,
     isWindowMaximized,
-    closeWindow
+    closeWindow,
+    close_settings
 };

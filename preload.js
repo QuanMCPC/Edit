@@ -7,6 +7,7 @@ const {
     maxUnmaxWindow,
     isWindowMaximized,
     closeWindow,
+    close_settings,
 } = require("./menu-function");
 /*const {
     editor_about,
@@ -50,6 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     window.maxUnmaxWindow = maxUnmaxWindow;
     window.isWindowMaximized = isWindowMaximized;
     window.closeWindow = closeWindow;
+    window.close_settings = close_settings;
     /*window.editor_about = editor_about;
     window.editor_about_close = editor_about_close;
     window.editor_cancel_find = editor_cancel_find;

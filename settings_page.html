@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>edit - Settings</title>
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript" src="./settings_page.js"></script>
+        <style>
+            #menu-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 25px;
+                background: #3C3C3C;
+                -webkit-app-region: drag;
+            }
+            #menu-bar > div {
+                height: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .menubar-btn {
+                -webkit-app-region: no-drag;
+                margin: 0;
+                padding-left: 15px;
+                padding-right: 15px;
+                background-color: rgba(0, 0, 0, 0);
+                outline: none !important;
+            }
+            .menubar-btn:hover {
+                background-color: rgb(71, 71, 72)
+            }
+            .container {
+                height: calc(100vh - 30px);
+                background: #34475ab0;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 2em;
+            }
+            #close-btn:hover {
+                background: rgb(255, 0, 0);
+            }
+            label {
+                color: white;
+                font-size: 110%
+            }
+            #container {
+                padding: 10px
+            }
+        </style>
+    </head>
+    <body style="background-color: rgb(48, 48, 48);">
+        <div id="menu-bar">
+            <div class="left" role="menu">
+                <p style="color: white; margin-left: 20px;" id="title">edit - Settings</p>
+            </div>
+            <div class="right">
+                <button class="menubar-btn" id="close-btn" title="Close"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.116 8l-4.558 4.558.884.884L8 8.884l4.558 4.558.884-.884L8.884 8l4.558-4.558-.884-.884L8 7.116 3.442 2.558l-.884.884L7.116 8z"/></svg></button>
+            </div>
+        </div>
+        <div id="container">
+            <h3 style="color: white; text-align: center; margin: 9px">Settings</h3>
+            <label for="autoRecovery">AutoRecovery: </label><input type="checkbox" name="autoRecovery" id="autoRecovery">
+            <label for="autoRecoveryInterval">AutoRecovery Interval (Seconds): </label><input type="number" name="autoRecoveryInterval" id="autoRecoveryInterval" style="width: 50px"><br>
+            <label for="width">Width: </label><input type="number" name="width" id="width" style="width: 50px">
+            <label for="height">Height: </label><input type="number" name="height" id="height" style="width: 50px"><br>
+            <label for="minWidth">Min Width: </label><input type="number" name="minWidth" id="minWidth" style="width: 50px">
+            <label for="minHeight">Min Height: </label><input type="number" name="minHeight" id="minHeight" style="width: 50px"><br>
+            <label for="backgroundTextColor">Background text color (Typing): </label><input type="color" name="backgroundTextColor" id="backgroundTextColor"><br>
+            <label for="textColor">Text color (Typing): </label><input type="color" name="textColor" id="textColor"><br>
+            <label for="noUpdateOnStartup">No update on startup: </label><input type="checkbox" name="noUpdateOnStartup" id="noUpdateOnStartup"><br>
+            <label for="showInfoBar">Status bar: </label><input type="checkbox" name="showInfoBar" id="showInfoBar"><br>
+            <label for="unresizable">Unresizable: </label><input type="checkbox" name="unresizable" id="unresizable"><br>
+            <button id="apply">Apply</button>
+        </div>
+    </body>
+</html>

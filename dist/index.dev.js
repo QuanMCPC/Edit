@@ -26,6 +26,19 @@ var updateFinished = false,
     global_data_,
     updateOnStartup = true;
 app.whenReady().then(function () {
+  var a_ = require("node-localstorage").LocalStorage;
+
+  var localStorage_ = new a_("autoRecovery");
+  var settings;
+
+  require("fs").readFile(require("path").join(__dirname, "settings.json"), {
+    encoding: "utf-8"
+  }, function (_error, data) {
+    settings = JSON.parse(data); //console.log(settings)
+
+    update_Phrase_2();
+  });
+
   function update_Phrase_2() {
     if (fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))) {
       console.log("If you can see this message, please change the directory to somewhere else if the current one is in the old version's folder");
@@ -77,17 +90,16 @@ app.whenReady().then(function () {
     }
   }
 
-  update_Phrase_2();
-
   function main() {
     var myWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 0,
+      height: 0,
       webPreferences: {
         nodeIntegration: true,
         preload: path.join(__dirname, "preload.js"),
         enableRemoteModule: true,
-        nativeWindowOpen: true
+        nativeWindowOpen: true,
+        spellcheck: false
       },
       frame: isWindows ? false : true,
       minWidth: 320,
@@ -103,8 +115,72 @@ app.whenReady().then(function () {
       updateFinished = false;
     }
 
-    myWindow.webContents.executeJavaScript("var cachedText = \"\"");
-    myWindow.loadFile("index.html");
+    function loadSettings() {
+      if (settings.unResizable) {
+        myWindow.setResizable(false);
+      }
+
+      if (settings.noUpdateOnStartup) {
+        updateOnStartup = false; //console.log(updateOnStartup)
+
+        myWindow.show();
+        myWindow.setAlwaysOnTop(false);
+      }
+
+      myWindow.setMinimumSize(settings.minWidth, settings.minHeight);
+
+      if (settings.width < myWindow.getMinimumSize()[0]) {
+        myWindow.setMinimumSize(settings.minWidth, myWindow.getMinimumSize()[1]);
+      }
+
+      if (settings.height < myWindow.getMinimumSize()[1]) {
+        myWindow.setMinimumSize(myWindow.getMinimumSize()[0], settings.minHeight);
+      }
+
+      myWindow.setSize(settings.width, settings.height);
+      myWindow.webContents.executeJavaScript("\n                document.getElementById(\"editor_input\").style.color = \"".concat(settings.textColor, "\"\n                document.getElementById(\"editor_input\").style.backgroundColor = \"").concat(settings.backgroundTextColor, "\"\n            "));
+    }
+
+    require("electron").ipcMain.on("reload_settings", function () {
+      require("fs").readFile(require("path").join(__dirname, "settings.json"), {
+        encoding: "utf-8"
+      }, function (_error, data) {
+        settings = JSON.parse(data);
+        loadSettings();
+        myWindow.webContents.send("reload_settings_1");
+      });
+    });
+
+    myWindow.loadFile("index.html").then(function () {
+      loadSettings();
+      myWindow.webContents.executeJavaScript("var cachedText = \"\"");
+      myWindow.center();
+
+      if (updateOnStartup) {
+        checkForUpdate(false);
+      } else {
+        test_autoRecovery();
+        updateOnStartup = true;
+      }
+    });
+
+    function test_autoRecovery() {
+      if (!!localStorage_.getItem("autoRecoveryContent")) {
+        require("electron").dialog.showMessageBox(myWindow, {
+          type: "question",
+          title: "edit - AutoRecovery",
+          message: "It look like the program has closed and the document haven't been saved. Would you like to saved it?",
+          buttons: ["Yes", "No"]
+        }).then(function (response) {
+          if (response.response == 0) {
+            myWindow.webContents.executeJavaScript("\n                        var a_ = require(\"node-localstorage\").LocalStorage;\n                        var localStorage_ = new a_(\"autoRecovery\")\n                        document.getElementById(\"editor_input\").value = localStorage_.getItem(\"autoRecoveryContent\")\n                        require(\"electron\").remote.dialog.showSaveDialog(null, {title: \"Save File\", buttonLabel: \"Save file\", defaultPath: \"default.txt\"}).then((fileNames) => {\n                            if (!fileNames.canceled) {\n                                require(\"fs\").writeFile(fileNames.filePath, document.getElementById(\"editor_input\").value, (error) => {\n                                    if (error) {\n                                        //alert(\"An error ocurred writing the file:\", error.message)\n                                    } else {\n                                        document.getElementById(\"_file_name\").innerHTML = fileNames.filePath\n                                        document.getElementById(\"current_state\").innerHTML = \"\";\n                                        cachedText = document.getElementById(\"editor_input\").value\n                                        localStorage_.removeItem(\"autoRecoveryContent\")\n                                    }\n                                })\n                            }\n                        })\n                    ");
+          } else {
+            localStorage_.removeItem("autoRecoveryContent");
+          }
+        });
+      }
+    }
+
     ipcMain.on("display-app-menu", function (_e, args) {
       if (isWindows && myWindow) {
         menu.items[3].submenu.items[3].click = function () {
@@ -375,11 +451,13 @@ app.whenReady().then(function () {
               } else if (response.response == 1) {
                 myWindow.show();
                 myWindow.setAlwaysOnTop(false);
+                test_autoRecovery();
               }
             });
           } else {
             myWindow.show();
             myWindow.setAlwaysOnTop(false);
+            test_autoRecovery();
 
             if (userAsked) {
               require("electron").dialog.showMessageBox(null, {
@@ -395,6 +473,7 @@ app.whenReady().then(function () {
         } else {
           myWindow.show();
           myWindow.setAlwaysOnTop(false);
+          test_autoRecovery();
 
           if (userAsked) {
             require("electron").dialog.showMessageBox(null, {
@@ -429,12 +508,6 @@ app.whenReady().then(function () {
           }
         });
       });
-    }
-
-    if (updateOnStartup) {
-      checkForUpdate(false);
-    } else {
-      updateOnStartup = true;
     }
   }
 });

@@ -65,13 +65,6 @@ body {
     text-align: left;
     text-decoration: none;
 }
-#editor_input::-webkit-scrollbar {
-    display: none;
-}
-#editor_input {
-    -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-}
 #edit_file_dropdown:hover #edit_file_menu { display: block; }
 #edit_edit_dropdown:hover #edit_edit_menu { display: block; }
 #edit_search_dropdown:hover #edit_search_menu { display: block; }
