@@ -1,1 +1,1 @@
-{"autoRecovery":false,"autoRecoveryInterval":5,"backgroundTextColor":"#000000","textColor":"#ffffff","width":800,"height":600,"minWidth":320,"minHeight":240,"noUpdateOnStartup":false,"unResizable":false,"showInfoBar":false}
+{"backgroundTextColor":"#000000","textColor":"#ffffff","width":800,"height":600,"minWidth":360,"minHeight":240,"noUpdateOnStartup":false,"unResizable":false,"characterLimit":"0","autoRecovery":false,"autoRecoveryInterval":0,"showInfoBar":false,"allowBetaUpdate":false}

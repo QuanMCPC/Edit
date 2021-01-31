@@ -475,7 +475,7 @@ const menu = Menu.buildFromTemplate([
                 click(_menuItem, browserWindow, _event) {
                     const { BrowserWindow } = require("electron")
                     const isWindows = process.platform === "win32";
-                    global.settings = new BrowserWindow({
+                    var settings = new BrowserWindow({
                         modal: true,
                         alwaysOnTop: true,
                         autoHideMenuBar: true,
@@ -484,7 +484,7 @@ const menu = Menu.buildFromTemplate([
                         resizable: false,
                         minimizable: false,
                         width: 500,
-                        height: 300,
+                        height: 370,
                         webPreferences: {
                             nodeIntegration: true,
                             preload: require("path").join(__dirname, "preload.js"),
@@ -492,7 +492,7 @@ const menu = Menu.buildFromTemplate([
                             nativeWindowOpen: true
                         }
                     })
-                    global.settings.loadFile("settings_page.html")
+                    settings.loadFile("settings_page.html")
                 }
             },
             {

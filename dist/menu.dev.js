@@ -277,7 +277,7 @@ var menu = Menu.buildFromTemplate([{
           BrowserWindow = _require2.BrowserWindow;
 
       var isWindows = process.platform === "win32";
-      global.settings = new BrowserWindow({
+      var settings = new BrowserWindow({
         modal: true,
         alwaysOnTop: true,
         autoHideMenuBar: true,
@@ -286,7 +286,7 @@ var menu = Menu.buildFromTemplate([{
         resizable: false,
         minimizable: false,
         width: 500,
-        height: 300,
+        height: 370,
         webPreferences: {
           nodeIntegration: true,
           preload: require("path").join(__dirname, "preload.js"),
@@ -294,7 +294,7 @@ var menu = Menu.buildFromTemplate([{
           nativeWindowOpen: true
         }
       });
-      global.settings.loadFile("settings_page.html");
+      settings.loadFile("settings_page.html");
     }
   }, {
     label: "Check for update",

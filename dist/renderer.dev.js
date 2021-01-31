@@ -20,6 +20,14 @@ window.addEventListener("DOMContentLoaded", function () {
     }, function (_err, data) {
       settings = JSON.parse(data);
 
+      if (settings.characterLimit > 0) {
+        document.getElementById("editor_input").setAttribute("maxlength", settings.characterLimit);
+        document.getElementById("letter_count_1").innerHTML = " / ".concat(settings.characterLimit);
+      } else {
+        document.getElementById("editor_input").removeAttribute("maxlength");
+        document.getElementById("letter_count_1").innerHTML = "";
+      }
+
       if (settings.autoRecovery) {
         if (settings.autoRecoveryInterval <= 0) {
           document.getElementById("editor_input").addEventListener("keydown", function () {

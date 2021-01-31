@@ -5,7 +5,8 @@ const { menu } = require("./menu");
 const isWindows = process.platform === "win32";
 const DZip = require("decompress-zip");
 const ProgressBar = require('electron-progressbar');
-const del = require("del")
+const del = require("del");
+const contextMenu = require('electron-context-menu');
 var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
     var a_ = require("node-localstorage").LocalStorage;
@@ -85,9 +86,28 @@ app.whenReady().then(() => {
             myWindow.show()
             updateFinished = false;
         }
+        contextMenu({
+            prepend: (defaultActions, contextMenu, myWindow) => [
+                {
+                    label: "Undo",
+                    role: "undo"
+                },
+                {
+                    label: "Redo",
+                    role: "redo"
+                }
+            ],
+            window: myWindow,
+            labels: {
+                searchWithGoogle: "Serach Google for \"{selection}\""
+            }
+        })
         function loadSettings() {
+            console.log(JSON.stringify(settings))
             if (settings.unResizable) {
                 myWindow.setResizable(false)
+            } else {
+                myWindow.setResizable(true)
             }
             if (settings.noUpdateOnStartup) {
                 updateOnStartup = false
@@ -398,7 +418,7 @@ app.whenReady().then(() => {
                     global_data_ = data_
                     //console.log(data_)
                     checkForUpdateProgressBar.setCompleted()
-                    if (!data_[0].prerelease) {
+                    if ((settings.allowBetaUpdate) || (!data_[0].prerelease && !settings.allowBetaUpdate)) {
                         if (require("electron").app.getVersion().split(".").splice(0, 2).join(".") !== data_[0].tag_name.replace("v", "")) {
                             require("electron").dialog.showMessageBox(myWindow, {
                                 noLink: true,
@@ -406,7 +426,7 @@ app.whenReady().then(() => {
                                 buttons: ["Yes", "Later"],
                                 defaultId: 0,
                                 title: "edit - Update",
-                                message: "Update is avaliable! Would you like to install it now?",
+                                message: `Update is avaliable! Would you like to install it now?\nCurrent version: v${require("electron").app.getVersion()}\nNew verion: ${data_[0].tag_name} (Created at: ${data_[0].created_at}, Published at: ${data_[0].published_at})`,
                             }).then((response) => {
                                 //console.log(response)
                                 if (response.response == 0) {
@@ -456,7 +476,7 @@ app.whenReady().then(() => {
                             myWindow.setAlwaysOnTop(false)
                             test_autoRecovery()
                             if (userAsked) {
-                                require("electron").dialog.showMessageBox(null, {
+                                require("electron").dialog.showMessageBox(myWindow, {
                                     type: "info",
                                     message: "There is currently no update avaliable",
                                     title: "edit - Update"
@@ -471,7 +491,7 @@ app.whenReady().then(() => {
                         myWindow.setAlwaysOnTop(false)
                         test_autoRecovery()
                         if (userAsked) {
-                            require("electron").dialog.showMessageBox(null, {
+                            require("electron").dialog.showMessageBox(myWindow, {
                                 type: "info",
                                 message: "There is currently no update avaliable",
                                 title: "edit - Update"

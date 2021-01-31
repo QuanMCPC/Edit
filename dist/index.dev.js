@@ -22,6 +22,8 @@ var ProgressBar = require('electron-progressbar');
 
 var del = require("del");
 
+var contextMenu = require('electron-context-menu');
+
 var updateFinished = false,
     global_data_,
     updateOnStartup = true;
@@ -115,9 +117,29 @@ app.whenReady().then(function () {
       updateFinished = false;
     }
 
+    contextMenu({
+      prepend: function prepend(defaultActions, contextMenu, myWindow) {
+        return [{
+          label: "Undo",
+          role: "undo"
+        }, {
+          label: "Redo",
+          role: "redo"
+        }];
+      },
+      window: myWindow,
+      labels: {
+        searchWithGoogle: "Serach Google for \"{selection}\""
+      }
+    });
+
     function loadSettings() {
+      console.log(JSON.stringify(settings));
+
       if (settings.unResizable) {
         myWindow.setResizable(false);
+      } else {
+        myWindow.setResizable(true);
       }
 
       if (settings.noUpdateOnStartup) {
@@ -420,7 +442,7 @@ app.whenReady().then(function () {
 
         checkForUpdateProgressBar.setCompleted();
 
-        if (!data_[0].prerelease) {
+        if (settings.allowBetaUpdate || !data_[0].prerelease && !settings.allowBetaUpdate) {
           if (require("electron").app.getVersion().split(".").splice(0, 2).join(".") !== data_[0].tag_name.replace("v", "")) {
             require("electron").dialog.showMessageBox(myWindow, {
               noLink: true,
@@ -428,7 +450,7 @@ app.whenReady().then(function () {
               buttons: ["Yes", "Later"],
               defaultId: 0,
               title: "edit - Update",
-              message: "Update is avaliable! Would you like to install it now?"
+              message: "Update is avaliable! Would you like to install it now?\nCurrent version: v".concat(require("electron").app.getVersion(), "\nNew verion: ").concat(data_[0].tag_name, " (Created at: ").concat(data_[0].created_at, ", Published at: ").concat(data_[0].published_at, ")")
             }).then(function (response) {
               //console.log(response)
               if (response.response == 0) {
@@ -460,7 +482,7 @@ app.whenReady().then(function () {
             test_autoRecovery();
 
             if (userAsked) {
-              require("electron").dialog.showMessageBox(null, {
+              require("electron").dialog.showMessageBox(myWindow, {
                 type: "info",
                 message: "There is currently no update avaliable",
                 title: "edit - Update"
@@ -476,7 +498,7 @@ app.whenReady().then(function () {
           test_autoRecovery();
 
           if (userAsked) {
-            require("electron").dialog.showMessageBox(null, {
+            require("electron").dialog.showMessageBox(myWindow, {
               type: "info",
               message: "There is currently no update avaliable",
               title: "edit - Update"

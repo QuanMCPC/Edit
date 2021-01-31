@@ -1,13 +1,13 @@
 {
   "name": "edit",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Edit",
   "main": "index.js",
   "scripts": {
     "test": "electron . -something 12",
-    "buildWin": "(electron-packager ./ edit --build-version=1.6 --ignore=^/output --icon=\"icon.ico\" --platform=\"win32\" --win32metadata.CompanyName=\"Quan's Home\" --win32metadata.FileDescription=\"Edit Program is now a native program\" --win32metadata.ProductName=\"Edit Program (Native Program)\") & (rename edit-win32-x64 edit-win32-1.6) & (7z a -tzip -mx9 -mm=Deflate edit-win32-1.6.zip edit-win32-1.6) & (rd /s /q edit-win32-1.6) & (move edit-win32-1.6.zip output) & (7z h -scrcsha1 output/edit-win32-1.6.zip) & (7z h -scrcsha256 output/edit-win32-1.6.zip)",
-    "buildLinux": "(electron-packager ./ edit --build-version=1.6 --ignore=^/output --icon=\"icon.ico\" --platform=\"linux\") & (rename edit-linux-x64 edit-linux-1.6) & (7z a -tzip -mx9 -mm=Deflate edit-linux-1.6.zip edit-linux-1.6) & (rd /s /q edit-linux-1.6) & (move edit-linux-1.6.zip output) & (7z h -scrcsha1 output/edit-linux-1.6.zip) & (7z h -scrcsha256 output/edit-linux-1.6.zip)",
-    "buildBoth": "(electron-packager ./ edit --build-version=1.6 --ignore=^/output --icon=\"icon.ico\" --platform=\"win32\" --win32metadata.CompanyName=\"Quan's Home\" --win32metadata.FileDescription=\"Edit Program is now a native program\" --win32metadata.ProductName=\"Edit Program (Native Program)\") & (rename edit-win32-x64 edit-win32-1.6) & (7z a -tzip -mx9 -mm=Deflate edit-win32-1.6.zip edit-win32-1.6) & (rd /s /q edit-win32-1.6) & (move edit-win32-1.6.zip output) & (7z h -scrcsha1 output/edit-win32-1.6.zip) & (7z h -scrcsha256 output/edit-win32-1.6.zip) & (electron-packager ./ edit --build-version=1.6 --ignore=^/output --icon=\"icon.ico\" --platform=\"linux\") & (rename edit-linux-x64 edit-linux-1.6) & (7z a -tzip -mx9 -mm=Deflate edit-linux-1.6.zip edit-linux-1.6) & (rd /s /q edit-linux-1.6) & (move edit-linux-1.6.zip output) & (7z h -scrcsha1 output/edit-linux-1.6.zip) & (7z h -scrcsha256 output/edit-linux-1.6.zip)"
+    "buildWin": "(electron-packager ./ edit --build-version=1.7 --ignore=^/output --icon=\"icon.ico\" --platform=\"win32\" --win32metadata.CompanyName=\"Quan's Home\" --win32metadata.FileDescription=\"Edit Program is now a native program\" --win32metadata.ProductName=\"Edit Program (Native Program)\") & (rename edit-win32-x64 edit-win32-1.7) & (7z a -tzip -mx9 -mm=Deflate edit-win32-1.7.zip edit-win32-1.7) & (rd /s /q edit-win32-1.7) & (move edit-win32-1.7.zip output) & (7z h -scrcsha1 output/edit-win32-1.7.zip) & (7z h -scrcsha256 output/edit-win32-1.7.zip)",
+    "buildLinux": "(electron-packager ./ edit --build-version=1.7 --ignore=^/output --icon=\"icon.ico\" --platform=\"linux\") & (rename edit-linux-x64 edit-linux-1.7) & (7z a -tzip -mx9 -mm=Deflate edit-linux-1.7.zip edit-linux-1.7) & (rd /s /q edit-linux-1.7) & (move edit-linux-1.7.zip output) & (7z h -scrcsha1 output/edit-linux-1.7.zip) & (7z h -scrcsha256 output/edit-linux-1.7.zip)",
+    "buildBoth": "(electron-packager ./ edit --build-version=1.7 --ignore=^/output --icon=\"icon.ico\" --platform=\"win32\" --win32metadata.CompanyName=\"Quan's Home\" --win32metadata.FileDescription=\"Edit Program is now a native program\" --win32metadata.ProductName=\"Edit Program (Native Program)\") & (rename edit-win32-x64 edit-win32-1.7) & (7z a -tzip -mx9 -mm=Deflate edit-win32-1.7.zip edit-win32-1.7) & (rd /s /q edit-win32-1.7) & (move edit-win32-1.7.zip output) & (7z h -scrcsha1 output/edit-win32-1.7.zip) & (7z h -scrcsha256 output/edit-win32-1.7.zip) & (electron-packager ./ edit --build-version=1.7 --ignore=^/output --icon=\"icon.ico\" --platform=\"linux\") & (rename edit-linux-x64 edit-linux-1.7) & (7z a -tzip -mx9 -mm=Deflate edit-linux-1.7.zip edit-linux-1.7) & (rd /s /q edit-linux-1.7) & (move edit-linux-1.7.zip output) & (7z h -scrcsha1 output/edit-linux-1.7.zip) & (7z h -scrcsha256 output/edit-linux-1.7.zip)"
   },
   "repository": {
     "type": "git",
@@ -27,9 +27,10 @@
   "dependencies": {
     "decompress-zip": "^0.2.2",
     "del": "^6.0.0",
+    "electron-context-menu": "^2.4.0",
     "electron-fetch": "^1.7.2",
     "electron-progressbar": "^2.0.0",
     "fs-extra": "^9.0.1",
-    "node-localstorage": "^2.1.6"
+    "node-localstorage": "^2.1.7"
   }
 }

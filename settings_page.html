@@ -44,7 +44,7 @@
             #close-btn:hover {
                 background: rgb(255, 0, 0);
             }
-            label {
+            label:not([class="b-contain"]) {
                 color: white;
                 font-size: 110%
             }
@@ -64,18 +64,44 @@
         </div>
         <div id="container">
             <h3 style="color: white; text-align: center; margin: 9px">Settings</h3>
-            <label for="autoRecovery">AutoRecovery: </label><input type="checkbox" name="autoRecovery" id="autoRecovery">
-            <label for="autoRecoveryInterval">AutoRecovery Interval (Seconds): </label><input type="number" name="autoRecoveryInterval" id="autoRecoveryInterval" style="width: 50px"><br>
+            <!-- <label for="autoRecovery">AutoRecovery: </label><input type="checkbox" name="autoRecovery" id="autoRecovery"> -->
+            <label class="b-contain settings">
+                <span>AutoRecovery</span>
+                <input type="checkbox" id="autoRecovery">
+                <div class="b-input"></div>
+            </label><br>
+            <label for="autoRecoveryInterval">AutoRecovery Interval (Seconds) <small><u title="Set the number to smaller then 1 for save every keystroke">(?)</u></small>: </label><input type="number" name="autoRecoveryInterval" id="autoRecoveryInterval" style="width: 50px"><br>
+            <label for="characterLimit">Character limit <sub><u title="Set number to lower then 1 for no limit">(?)</u></sub>: </label><input type="number" name="characterLimit" id="characterLimit" style="width: 50px"><br>
+            <label class="b-contain settings">
+                <span>Download Beta update <sub><u title="Once enabled, edit will download the latest update even if it's an beta release. Warning: This features is only for developer for testing purposes and enabling this can result in downloading versions with access to early features but also mostly bugs. Beware!">(?)</u></sub></span>
+                <input type="checkbox" id="allowBetaUpdate">
+                <div class="b-input"></div>
+            </label><br>
             <label for="width">Width: </label><input type="number" name="width" id="width" style="width: 50px">
             <label for="height">Height: </label><input type="number" name="height" id="height" style="width: 50px"><br>
             <label for="minWidth">Min Width: </label><input type="number" name="minWidth" id="minWidth" style="width: 50px">
             <label for="minHeight">Min Height: </label><input type="number" name="minHeight" id="minHeight" style="width: 50px"><br>
             <label for="backgroundTextColor">Background text color (Typing): </label><input type="color" name="backgroundTextColor" id="backgroundTextColor"><br>
             <label for="textColor">Text color (Typing): </label><input type="color" name="textColor" id="textColor"><br>
-            <label for="noUpdateOnStartup">No update on startup: </label><input type="checkbox" name="noUpdateOnStartup" id="noUpdateOnStartup"><br>
-            <label for="showInfoBar">Status bar: </label><input type="checkbox" name="showInfoBar" id="showInfoBar"><br>
-            <label for="unresizable">Unresizable: </label><input type="checkbox" name="unresizable" id="unresizable"><br>
-            <button id="apply">Apply</button>
+            <label class="b-contain settings">
+                <span>No update on startup</span>
+                <input type="checkbox" id="noUpdateOnStartup">
+                <div class="b-input"></div>
+            </label><br>
+            <!-- <label for="noUpdateOnStartup">No update on startup: </label><input type="checkbox" name="noUpdateOnStartup" id="noUpdateOnStartup"><br> -->
+            <!-- <label for="showInfoBar">Status bar: </label><input type="checkbox" name="showInfoBar" id="showInfoBar"> -->
+            <label class="b-contain settings">
+                <span>Status bar</span>
+                <input type="checkbox" id="showInfoBar">
+                <div class="b-input"></div>
+            </label><br>
+            <!-- <label for="unresizable">Unresizable: </label><input type="checkbox" name="unresizable" id="unresizable"> -->
+            <label class="b-contain settings">
+                <span>Unresizable</span>
+                <input type="checkbox" id="unresizable">
+                <div class="b-input"></div>
+            </label><br>
+            <button id="apply" style="margin-top: 7px;">Apply</button><button id="reset">Reset settings</button><span style="margin-left: 30px; color: white; display: inline;" id="saved"></span>
         </div>
     </body>
 </html>
