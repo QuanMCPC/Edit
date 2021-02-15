@@ -18,46 +18,147 @@ app.whenReady().then(() => {
         update_Phrase_2()
     })
     function update_Phrase_2() {
-        if ((fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file")))) {
+        if (fs.existsSync(path.normalize(process.execPath + "/../../../update-info-82163921.json"))) {
             console.log("If you can see this message, please change the directory to somewhere else if the current one is in the old version's folder")
-            fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {encoding: "utf-8"}, (_err, data) => {
-                del(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}/`).replace(/\\/g, "/"), { force: true }).then(() => {
-                    //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-                    del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(() => {
-                        //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
-                        require("electron").dialog.showMessageBox(null, {
-                            noLink: true,
-                            type: "info",
-                            title: "edit - Update finished",
-                            message: "The update installed sucessfully!"
-                        }).then(() => {
-                            updateFinished = true
-                            main()
+            fs.readFile(path.normalize(process.execPath + "/../../../update-info-82163921.json"), {encoding: "utf-8"}, (err, data) => {
+                var data_ = JSON.parse(data)
+                if (data_.stage == 1) {
+                    //Stage 1: new version
+                    //Goal: Rename the old version to a random name / Run old version
+                    //Old version directory: C:\edit\ -> C:\edit-0192837465
+                    //Rename to: C:\edit-123\
+                    //New version (Current): C:\edit-update-12312\edit\edit.exe
+                    var count1 = 0
+                    function repeat1() {
+                        fs.rename(path.normalize(process.execPath + "/../../../edit/"), path.normalize(process.execPath + "/../../../edit-0192837465/"), (err) => {
+                            if (!err) {
+                                data_.stage = 2
+                                fs.writeFile(path.normalize(process.execPath + "/../../../update-info-82163921.json"), JSON.stringify(data_), () => {
+                                    if (process.platform === "win32") {
+                                        count1 = 0
+                                        require("electron").shell.openPath(path.normalize(process.execPath + "/../../../" + `edit-0192837465/edit.exe`)).then(() => { process.exit() })
+                                    } else {
+                                        count1 = 0
+                                        require("electron").shell.openPath(path.normalize(process.execPath + "/../../../" + `edit-0192837465/edit`)).then(() => { process.exit() })
+                                    }
+                                })
+                            } else if (count1 <= 30) { setTimeout(() => { repeat1(); ++count1; }, 1000) } else {
+                                require("electron").dialog.showMessageBox(null, {
+                                    title: "edit - Problem while updating",
+                                    message: `A problem occurred that make edit unable to complete the update.\nDetail: Unable to rename folder: ${path.normalize(process.execPath + "/../../../edit/")} to ${path.normalize(process.execPath + "/../../../edit-0192837465/")}.\nMore detail: ${err}\nBecause this can sometimes happened during update, click "Try again", or try and close program that can be locking the file/folder`,
+                                    buttons: ["Try again"],
+                                    noLink: true
+                                }).then(response => { if (response.response == 0) { count1 = 0; repeat1() } })
+                            }
                         })
-                    })
-                }).catch((err) => {
-                    require("electron").dialog.showMessageBox(null, {
-                        noLink: true,
-                        type: "info",
-                        title: "edit - Update paused",
-                        message: "edit was unable to complete the update.\n Details are in below\n" + err,
-                        buttons: ["Try again", "Cancel"]
-                    }).then(response => {
-                        if (response.response == 0) {
-                            update_Phrase_2();
-                        } else {
-                            require("electron").dialog.showMessageBox(null, {
-                                noLink: true,
-                                type: "info",
-                                title: "edit - Update canceled",
-                                message: "You have canceled update, edit will now always try to complete the update on every startup"
-                            }).then(() => {
-                                updateFinished = true;
-                                main()
+                    }
+                    repeat1()
+                }
+            })
+        } else if (fs.existsSync(path.normalize(process.execPath + "/../../update-info-82163921.json"))) {
+            console.log("If you can see this message, please change the directory to somewhere else if the current one is in the old version's folder")
+            fs.readFile(path.normalize(process.execPath + "/../../update-info-82163921.json"), {encoding: "utf-8"}, (err, data) => {
+                var data_ = JSON.parse(data)
+                if (data_.stage == 2) {
+                    //Stage 2: Old version
+                    //Goal: Move the new folder to the parent directory / Rename the new folder to edit
+                    //Current directory: C:\edit-0192837465\edit.exe
+                    //New version: C:\edit-update-12312\edit\edit.exe -> C:\edit\edit.exe
+                    var count2 = 0
+                    function repeat2() {
+                        require("fs-extra").move(path.normalize(process.execPath + `/../../edit-update-${data_.updateId}/edit/`), path.normalize(process.execPath + "/../../edit/"), err => {
+                            if (!err) {
+                                data_.stage = 3
+                                fs.writeFile(path.normalize(process.execPath + "/../../update-info-82163921.json"), JSON.stringify(data_), () => {
+                                    if (process.platform === "win32") {
+                                        require("electron").shell.openPath(path.normalize(process.execPath + "/../../edit/edit.exe")).then(() => { process.exit() })
+                                    } else {
+                                        require("electron").shell.openPath(path.normalize(process.execPath + "/../../edit/edit.exe")).then(() => { process.exit() })
+                                    }
+                                })
+                            } else if (count2 <= 30) { setTimeout(() => { repeat2(); ++count2; }, 1000) } else {
+                                require("electron").dialog.showMessageBox(null, {
+                                    title: "edit - Problem while updating",
+                                    message: `A problem occurred that make edit unable to complete the update.\nDetail: Unable to move folder: ${path.normalize(process.execPath + "/../../" + `edit-update-${data_.updateId}/edit`)} to ${path.normalize(process.execPath + "/../../")}.\nMore detail: ${err}\nBecause this can sometimes happened during update, click "Try again", or try and close program that can be locking the file/folder`,
+                                    buttons: ["Try again"],
+                                    noLink: true
+                                }).then(response => { if (response.response == 0) { count2 = 0; repeat2() } })
+                            }
+                        })
+                    }
+                    repeat2()
+                } else if (data_.stage == 3) {
+                    //Stage 3: New version
+                    //Goal: Delete the old version, Move the settings from the old version to the new version
+                    //Current directory: C:\edit\edit.exe
+                    //Old version: C:\edit-0192837465\edit.exe
+                    var count3 = 0
+                    function repeat3() {
+                        require("fs-extra").move(process.execPath + "/../../edit-0192837465/resources/app/settings.json", process.execPath + "/../resources/app/settings.json", { overwrite: true }).then(() => {
+                            del([path.normalize(process.execPath + "/../../edit-0192837465"), path.normalize(process.execPath + `/../../update-${data_.updateId}.zip`), path.normalize(process.execpath + `/../../edit-update-${data_.updateId}`), path.normalize(process.execpath + "/../../update-info-82163921.json")], { force: true }).then(() => {
+                                count3 = 0
+                                require("electron").dialog.showMessageBox(null, {
+                                    noLink: true,
+                                    type: "info",
+                                    title: "edit - Update finished",
+                                    message: "The update installed sucessfully!"
+                                }).then(() => {
+                                    updateFinished = true
+                                    require("fs").readFile(require("path").join(__dirname, "settings.json"), { encoding: "utf-8" }, (_error, data) => { settings = JSON.parse(data); main(); })
+                                })
+                            }).catch(err => {
+                                if (count3 <= 30) {
+                                    setTimeout(() => { repeat3(); ++count3; }, 1000)
+                                } else {
+                                    require("electron").dialog.showMessageBox(null, {
+                                        title: "edit - Problem while updating",
+                                        message: `A problem occurred that make edit unable to complete the update.\nDetail: Unable to remove folder: ${path.normalize(process.execPath + "/../../edit-0192837465")}.\nMore detail: ${err}\nBecause this can sometimes happened during update, click "Try again", or try and close program that can be locking the file/folder`,
+                                        buttons: ["Try again"],
+                                        noLink: true
+                                    }).then(response => { if (response.response == 0) { count3 = 0; repeat3() } })
+                                }
                             })
-                        }
-                    })
-                })
+                        })
+                    }
+                    repeat3()
+                }
+                // del(path.normalize(process.execPath + "/.." + `/../edit/`).replace(/\\/g, "/"), { force: true }).then(() => {
+                //     //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
+                //     del(path.normalize(process.execPath + "/../update-info.json").replace(/\\/g, "/")).then(() => {
+                //         //fs.unlinkSync(path.normalize(process.execPath + "/../update-info.json"))
+                //         require("electron").dialog.showMessageBox(null, {
+                //             noLink: true,
+                //             type: "info",
+                //             title: "edit - Update finished",
+                //             message: "The update installed sucessfully!"
+                //         }).then(() => {
+                //             updateFinished = true
+                //             main()
+                //         })
+                //     })
+                // }).catch((err) => {
+                //     require("electron").dialog.showMessageBox(null, {
+                //         noLink: true,
+                //         type: "info",
+                //         title: "edit - Update paused",
+                //         message: "edit was unable to complete the update.\n Details are in below\n" + err,
+                //         buttons: ["Try again", "Cancel"]
+                //     }).then(response => {
+                //         if (response.response == 0) {
+                //             update_Phrase_2();
+                //         } else {
+                //             require("electron").dialog.showMessageBox(null, {
+                //                 noLink: true,
+                //                 type: "info",
+                //                 title: "edit - Update canceled",
+                //                 message: "You have canceled update, edit will now always try to complete the update on every startup"
+                //             }).then(() => {
+                //                 updateFinished = true;
+                //                 main()
+                //             })
+                //         }
+                //     })
+                // })
             })
         } else {
             main()
@@ -87,7 +188,7 @@ app.whenReady().then(() => {
             updateFinished = false;
         }
         contextMenu({
-            prepend: (defaultActions, contextMenu, myWindow) => [
+            prepend: (_defaultActions, _contextMenu, _myWindow) => [
                 {
                     label: "Undo",
                     role: "undo"
@@ -292,7 +393,8 @@ app.whenReady().then(() => {
         var version = 0
         const fetch = require("electron-fetch").default
         myWindow.webContents.session.on('will-download', (event, item, webContents) => {
-            item.setSavePath(path.normalize(process.execPath + "/.." + "/update.zip"))
+            var updatePackageId = Math.round(Math.random() * 1000000)
+            item.setSavePath(path.normalize(process.execPath + "/../.." + `/update-${updatePackageId}.zip`))
             var progressBar = new ProgressBar({
                 indeterminate: false,
                 text: 'Downloading the latest version of edit...',
@@ -347,33 +449,61 @@ app.whenReady().then(() => {
                         var versionNumber = "";
                         var data_ = global_data_
                         versionNumber = data_[0].tag_name.replace("v", "");
-                        del(item.getSavePath().replace(/\\/g, "/")).then(() => {
-                            if (os == "win32") {
-                                var path1 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit.exe`)
-                                var path2 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
-                                console.log(path1, path2)
-                                setTimeout(() => {
-                                    require("electron").shell.openPath(`${path1}`).then((error) => {
-                                        if (error) {
-                                            console.error(error);
-                                        }
-                                        require("fs").writeFile(`${path2}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
-                                    })
-                                }, 1000)
-                            } else {
-                                var path3 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/edit`)
-                                var path4 = path.normalize(process.execPath + "/.." + `/../edit-${os}-${versionNumber}/continue-update.edit_file`)
-                                console.log(path3, path4)
-                                setTimeout(() => {
-                                    require("electron").shell.openPath(`${path3}`).then((error) => {
-                                        if (error) {
-                                            console.error(error);
-                                        }
-                                        require("fs").writeFile(`${path4}`, `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`, () => { process.exit() })
-                                    })
-                                }, 1000)
-                            }
-                        })
+                        //del(item.getSavePath().replace(/\\/g, "/")).then(() => {
+                        if (os == "win32") {
+                            //Execute the new version
+                            //New version location: C:\edit\edit.exe\..\..\edit-update-12312\edit\edit.exe
+                            //Short: C:\edit-update-12312\edit\edit.exe
+                            var loop1 = 0
+                            var path1 = path.normalize(process.execPath + "/.." + `/../edit-update-${updatePackageId}/edit/edit.exe`)
+                            var path2 = path.normalize(process.execPath + "/.." + `/../update-info-82163921.json`) //Root directory
+                            console.log(path1, path2)
+                            setTimeout(() => {
+                                // require("electron").shell.openPath(`${path1}`).then((error) => {
+                                //     if (error) {
+                                //         console.error(error);
+                                //     }
+                                //     var content = {
+                                //         oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                                //         stage: 1,
+                                //         updateId: updatePackageId
+                                //     }
+                                //     require("fs").writeFile(`${path2}`, JSON.stringify(content), () => { process.exit() })
+                                // })
+                                var content = {
+                                    oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                                    stage: 1,
+                                    updateId: updatePackageId
+                                }
+                                function openFile1() { require("electron").shell.openPath(`${path1}`).then(err => {if (err && loop1 <= 30) {setTimeout(() => {openFile1()}, 1000)} else if (err && loop1 >= 30) { require("electron").dialog.showMessageBox(myWindow, { title: "edit - Problem will updating", message: `A problem has occur while opening: ${path1}\nDetail: ${err}` }) } else {process.exit()}} ) }
+                                require("fs").writeFile(`${path2}`, JSON.stringify(content), () => { openFile1() })
+                            }, 1000)
+                        } else {
+                            var path3 = path.normalize(process.execPath + "/.." + `/../edit-update-${updatePackageId}/edit/edit`)
+                            var path4 = path.normalize(process.execPath + "/.." + `/../update-info-82163921.json`)
+                            console.log(path3, path4)
+                            setTimeout(() => {
+                                var content = {
+                                    oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                                    stage: 1,
+                                    updateId: updatePackageId
+                                }
+                                function openFile2() { require("electron").shell.openPath(`${path3}`).then(err => {if (err && loop1 <= 30) {setTimeout(() => {openFile2()}, 1000)} else if (err && loop1 >= 30) { require("electron").dialog.showMessageBox(myWindow, { title: "edit - Problem will updating", message: `A problem has occur while opening: ${path3}\nDetail: ${err}` }) } else {process.exit()}} ) }
+                                require("fs").writeFile(`${path4}`, JSON.stringify(content), () => { openFile2() })
+                                // require("electron").shell.openPath(`${path3}`).then((error) => {
+                                //     if (error) {
+                                //         console.error(error);
+                                //     }
+                                //     var content = {
+                                //         oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                                //         stage: 1,
+                                //         updateId: updatePackageId
+                                //     }
+                                //     require("fs").writeFile(`${path4}`, JSON.stringify(content), () => { process.exit() })
+                                // })
+                            }, 1000)
+                        }
+                        //})
                         // require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
                         //     if (err) {
                         //         //myWindow.webContents.executeJavaScript(`console.log("${err}")`)
@@ -388,7 +518,7 @@ app.whenReady().then(() => {
                         //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
                     })
                     unzip.extract({
-                        path: path.normalize(process.execPath + "/.." + "/..")
+                        path: path.normalize(process.execPath + "/.." + `/../edit-update-${updatePackageId}`)
                     })
                 } else {
                     //console.log(`Download failed: ${state}`)

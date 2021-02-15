@@ -28,6 +28,8 @@ var updateFinished = false,
     global_data_,
     updateOnStartup = true;
 app.whenReady().then(function () {
+  console.log(path.normalize(process.execPath + "/../../../edit"));
+
   var a_ = require("node-localstorage").LocalStorage;
 
   var localStorage_ = new a_("autoRecovery");
@@ -42,17 +44,62 @@ app.whenReady().then(function () {
   });
 
   function update_Phrase_2() {
-    if (fs.existsSync(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"))) {
+    if (fs.existsSync(path.normalize(process.execPath + "/.." + "/update-info.json"))) {
       console.log("If you can see this message, please change the directory to somewhere else if the current one is in the old version's folder");
-      fs.readFile(path.normalize(process.execPath + "/.." + "/continue-update.edit_file"), {
+      fs.readFile(path.normalize(process.execPath + "/.." + "/update-info.json"), {
         encoding: "utf-8"
       }, function (_err, data) {
-        del(path.normalize(process.execPath + "/.." + "/../edit-".concat(process.platform, "-").concat(data, "/")).replace(/\\/g, "/"), {
-          force: true
-        }).then(function () {
-          //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
-          del(path.normalize(process.execPath + "/../continue-update.edit_file").replace(/\\/g, "/")).then(function () {
-            //fs.unlinkSync(path.normalize(process.execPath + "/../continue-update.edit_file"))
+        var data_ = JSON.parse(data);
+
+        if (data_.stage == 1) {
+          //Stage 1: new version
+          //Goal: Rename the old version to a random name / Run old version
+          //Old version directory: C:\edit\ -> C:\edit-0192837465
+          //Rename to: C:\edit-123\
+          //New version (Current): C:\edit-update-12312\edit\edit.exe
+          fs.rename(path.normalize(process.execPath + "/../../../edit/"), path.normalize(process.execPath + "/../../../edit-0192837465/"), function () {
+            data_.stage = 2;
+            fs.writeFile(path.normalize(process.execPath + "/.." + "/update-info.json"), JSON.stringify(data_), function () {
+              if (process.platform === "win32") {
+                require("electron").shell.openPath(path.normalize(process.execPath + "/../../../" + "edit-0192837465/edit.exe")).then(function () {
+                  process.exit();
+                });
+              } else {
+                require("electron").shell.openPath(path.normalize(process.execPath + "/../../../" + "edit-0192837465/edit")).then(function () {
+                  process.exit();
+                });
+              }
+            });
+          });
+        } else if (data_.stage == 2) {
+          //Stage 2: Old version
+          //Goal: Move the new folder to the parent directory / Rename the new folder to edit
+          //Current directory: C:\edit-0192837465\edit.exe
+          //New version: C:\edit-update-12312\edit\edit.exe -> C:\edit\edit.exe
+          require("fs-extra").move(path.normalize(process.execPath + "/../../" + "edit-update-".concat(data_.updateid, "/edit")), path.normalize(process.execPath + "/../../"), {
+            overwrite: true
+          }, function () {
+            data_.stage = 3;
+            fs.writeFile(path.normalize(process.execPath + "/../../edit" + "/update-info.json"), JSON.stringify(data_), function () {
+              if (process.platform === "win32") {
+                require("electron").shell.openPath(path.normalize(process.execPath + "/../../edit/edit.exe")).then(function () {
+                  process.exit();
+                });
+              } else {
+                require("electron").shell.openPath(path.normalize(process.execPath + "/../../edit/edit.exe")).then(function () {
+                  process.exit();
+                });
+              }
+            });
+          });
+        } else if (data_.stage == 3) {
+          //Stage 3: New version
+          //Goal: Delete the old version
+          //Current directory: C:\edit\edit.exe
+          //Old version: C:\edit-0192837465\edit.exe
+          del(path.normalize(process.execPath + "/../../edit-0192837465"), {
+            force: true
+          }).then(function () {
             require("electron").dialog.showMessageBox(null, {
               noLink: true,
               type: "info",
@@ -63,29 +110,44 @@ app.whenReady().then(function () {
               main();
             });
           });
-        })["catch"](function (err) {
-          require("electron").dialog.showMessageBox(null, {
-            noLink: true,
-            type: "info",
-            title: "edit - Update paused",
-            message: "edit was unable to complete the update.\n Details are in below\n" + err,
-            buttons: ["Try again", "Cancel"]
-          }).then(function (response) {
-            if (response.response == 0) {
-              update_Phrase_2();
-            } else {
-              require("electron").dialog.showMessageBox(null, {
-                noLink: true,
-                type: "info",
-                title: "edit - Update canceled",
-                message: "You have canceled update, edit will now always try to complete the update on every startup"
-              }).then(function () {
-                updateFinished = true;
-                main();
-              });
-            }
-          });
-        });
+        } // del(path.normalize(process.execPath + "/.." + `/../edit/`).replace(/\\/g, "/"), { force: true }).then(() => {
+        //     //fs.rmdirSync(path.normalize(process.execPath + "/.." + `/../edit-${process.platform}-${data}`), { recursive: true })
+        //     del(path.normalize(process.execPath + "/../update-info.json").replace(/\\/g, "/")).then(() => {
+        //         //fs.unlinkSync(path.normalize(process.execPath + "/../update-info.json"))
+        //         require("electron").dialog.showMessageBox(null, {
+        //             noLink: true,
+        //             type: "info",
+        //             title: "edit - Update finished",
+        //             message: "The update installed sucessfully!"
+        //         }).then(() => {
+        //             updateFinished = true
+        //             main()
+        //         })
+        //     })
+        // }).catch((err) => {
+        //     require("electron").dialog.showMessageBox(null, {
+        //         noLink: true,
+        //         type: "info",
+        //         title: "edit - Update paused",
+        //         message: "edit was unable to complete the update.\n Details are in below\n" + err,
+        //         buttons: ["Try again", "Cancel"]
+        //     }).then(response => {
+        //         if (response.response == 0) {
+        //             update_Phrase_2();
+        //         } else {
+        //             require("electron").dialog.showMessageBox(null, {
+        //                 noLink: true,
+        //                 type: "info",
+        //                 title: "edit - Update canceled",
+        //                 message: "You have canceled update, edit will now always try to complete the update on every startup"
+        //             }).then(() => {
+        //                 updateFinished = true;
+        //                 main()
+        //             })
+        //         }
+        //     })
+        // })
+
       });
     } else {
       main();
@@ -313,7 +375,8 @@ app.whenReady().then(function () {
     var fetch = require("electron-fetch")["default"];
 
     myWindow.webContents.session.on('will-download', function (event, item, webContents) {
-      item.setSavePath(path.normalize(process.execPath + "/.." + "/update.zip"));
+      var updatePackageId = Math.round(Math.random() * 1000000);
+      item.setSavePath(path.normalize(process.execPath + "/../.." + "/update-".concat(updatePackageId, ".zip")));
       var progressBar = new ProgressBar({
         indeterminate: false,
         text: 'Downloading the latest version of edit...',
@@ -365,53 +428,83 @@ app.whenReady().then(function () {
             var os = version ? "win32" : "linux";
             var versionNumber = "";
             var data_ = global_data_;
-            versionNumber = data_[0].tag_name.replace("v", "");
-            del(item.getSavePath().replace(/\\/g, "/")).then(function () {
-              if (os == "win32") {
-                var path1 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit.exe"));
-                var path2 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
-                console.log(path1, path2);
-                setTimeout(function () {
-                  require("electron").shell.openPath("".concat(path1)).then(function (error) {
-                    if (error) {
-                      console.error(error);
-                    }
+            versionNumber = data_[0].tag_name.replace("v", ""); //del(item.getSavePath().replace(/\\/g, "/")).then(() => {
 
-                    require("fs").writeFile("".concat(path2), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                      process.exit();
-                    });
-                  });
-                }, 1000);
-              } else {
-                var path3 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/edit"));
-                var path4 = path.normalize(process.execPath + "/.." + "/../edit-".concat(os, "-").concat(versionNumber, "/continue-update.edit_file"));
-                console.log(path3, path4);
-                setTimeout(function () {
-                  require("electron").shell.openPath("".concat(path3)).then(function (error) {
-                    if (error) {
-                      console.error(error);
-                    }
+            if (os == "win32") {
+              //Execute the new version
+              //New version location: C:\edit\edit.exe\..\..\edit-update-12312\edit\edit.exe
+              //Short: C:\edit-update-12312\edit\edit.exe
+              var path1 = path.normalize(process.execPath + "/.." + "/../edit-update-".concat(updatePackageId, "/edit/edit.exe"));
+              var path2 = path.normalize(process.execPath + "/.." + "/../edit-update-".concat(updatePackageId, "/edit/update-info.json"));
+              console.log(path1, path2);
+              setTimeout(function () {
+                // require("electron").shell.openPath(`${path1}`).then((error) => {
+                //     if (error) {
+                //         console.error(error);
+                //     }
+                //     var content = {
+                //         oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                //         stage: 1,
+                //         updateId: updatePackageId
+                //     }
+                //     require("fs").writeFile(`${path2}`, JSON.stringify(content), () => { process.exit() })
+                // })
+                var content = {
+                  oldVersion: "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")),
+                  stage: 1,
+                  updateId: updatePackageId
+                };
 
-                    require("fs").writeFile("".concat(path4), "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")), function () {
-                      process.exit();
-                    });
+                require("fs").writeFile("".concat(path2), JSON.stringify(content), function () {
+                  require("electron").shell.openPath("".concat(path1)).then(function (err) {
+                    return process.exit();
                   });
-                }, 1000);
-              }
-            }); // require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
+                });
+              }, 1000);
+            } else {
+              var path3 = path.normalize(process.execPath + "/.." + "/../edit-update-".concat(updatePackageId, "/edit"));
+              var path4 = path.normalize(process.execPath + "/.." + "/../edit-update-".concat(updatePackageId, "/update-info.json"));
+              console.log(path3, path4);
+              setTimeout(function () {
+                var content = {
+                  oldVersion: "".concat(require("electron").app.getVersion().split(".").splice(0, 2).join(".")),
+                  stage: 1,
+                  updateId: updatePackageId
+                };
+
+                require("fs").writeFile("".concat(path4), JSON.stringify(content), function () {
+                  require("electron").shell.openPath("".concat(path3)).then(function (err) {
+                    return process.exit();
+                  });
+                }); // require("electron").shell.openPath(`${path3}`).then((error) => {
+                //     if (error) {
+                //         console.error(error);
+                //     }
+                //     var content = {
+                //         oldVersion: `${require("electron").app.getVersion().split(".").splice(0, 2).join(".")}`,
+                //         stage: 1,
+                //         updateId: updatePackageId
+                //     }
+                //     require("fs").writeFile(`${path4}`, JSON.stringify(content), () => { process.exit() })
+                // })
+
+              }, 1000);
+            } //})
+            // require("fs").unlink(item.getSavePath().replace(/\\/g, "/"), (err) => {
             //     if (err) {
             //         //myWindow.webContents.executeJavaScript(`console.log("${err}")`)
             //     }
             // })
             // myWindow.webContents.executeJavaScript(`console.log("${app.getAppPath()}", "${path.normalize(process.execPath + "/..")}")`)
             //myWindow.focus()
+
           });
           unzip.on("progress", function (fileIndex, fileCount) {
             progressBar1.value = (fileIndex + 1) / fileCount * 100;
             progressBar1.detail = "Extracted file ".concat(fileIndex + 1, " of ").concat(fileCount); //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
           });
           unzip.extract({
-            path: path.normalize(process.execPath + "/.." + "/..")
+            path: path.normalize(process.execPath + "/.." + "/../edit-update-".concat(updatePackageId))
           });
         } else {//console.log(`Download failed: ${state}`)
         }
