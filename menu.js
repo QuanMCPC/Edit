@@ -460,7 +460,7 @@ const menu = Menu.buildFromTemplate([
                         type: "info",
                         buttons: ["Ok"],
                         title: "Info about edit",
-                        message: `edit (Native Edition)\nVersion: ${require("electron").app.getVersion()}\nOS: ${require("os").version()} (${require("os").type()}) ${require("os").arch()} ${require("os").release()}\nNode: v12.18.3\nElectron: v11.1.1\nChromium: v87.0.4280.8\nV8: v8.7.220.29-electron.0\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2020 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright`
+                        message: `edit (Native Edition)\nVersion: ${require("electron").app.getVersion()}\nOS: ${require("os").version()} (${require("os").type()}) ${require("os").arch()} ${require("os").release()}\nNode: v12.18.3\nElectron: v11.1.1\nChromium: v87.0.4280.8\nV8: v8.7.220.29-electron.0\nRelease Date: Monday, 4th 2021\nFirst release (For web version): Wednesday, 9th 2020\nCopyright (C) 2021 Quan_MCPC\nSource code are free to copy, modify and publish. Just remember to include my Copyright`
                     })
                 }
             },

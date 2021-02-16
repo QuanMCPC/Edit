@@ -20,4 +20,4 @@ ___
  - Insane lag when handling large amount of text (Not fixed)
 ### Have fun using edit!
 ___
-Copyright &copy; 2020 QuanMCPC (Also know has Quan_MCPC)
+Copyright &copy; 2021 QuanMCPC (Also know has Quan_MCPC)
