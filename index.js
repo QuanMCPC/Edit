@@ -357,11 +357,12 @@ app.whenReady().then(() => {
         }
         if (app.commandLine.hasSwitch("version") || app.commandLine.hasSwitch("v")) {
             console.log(`Version: ${app.getVersion()}`);
-            process.exit()
+            app.quit()
         }
         if (app.commandLine.hasSwitch("help") || app.commandLine.hasSwitch("h")) {
             console.log(`==================================\nedit version ${app.getVersion()} - Help page\n------------------------------\nUsage: edit <switch>\n--file=<directory_of_file> or --f=<directory_of_file>: Load the file into edit\n--no-update-on-startup or --n: Prevent edit from checking update on startup, require user to manually check for update\n--unresizable or --u: Make the edit window unresizable\n--size=<width>,<height> or --s=<width>,<height>: Load edit with the specify width and height.\nIf the width or height is smaller then the minimal width (320) or minimal height (240), the minimal width/height will be set to the width/height you specify\n--version or --v: Display the version of edit\n--help or --h: Display the help page\n--ghostTyping="<message>",<speed> or --g="<message>",<speed>: Ghost-typing a text into edit. Replace the <message> with the message you want ghost typing and <speed> with the delay between each character\n==================================`)
-            process.exit()
+            //process.exit()
+            app.quit()
         }
         if (app.commandLine.hasSwitch("ghostTyping") || app.commandLine.hasSwitch("g")) {
             if (app.commandLine.hasSwitch("version") || app.commandLine.hasSwitch("v")) {
