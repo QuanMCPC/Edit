@@ -7,6 +7,7 @@ const DZip = require("decompress-zip");
 const ProgressBar = require('electron-progressbar');
 const del = require("del");
 const contextMenu = require('electron-context-menu');
+const DecompressZip = require("decompress-zip");
 var updateFinished = false, global_data_, updateOnStartup = true
 app.whenReady().then(() => {
     var a_ = require("node-localstorage").LocalStorage;
@@ -95,7 +96,7 @@ app.whenReady().then(() => {
                     var count3 = 0
                     function repeat3() {
                         require("fs-extra").move(process.execPath + "/../../edit-0192837465/resources/app/settings.json", process.execPath + "/../resources/app/settings.json", { overwrite: true }).then(() => {
-                            del([path.normalize(process.execPath + "/../../edit-0192837465"), path.normalize(process.execPath + `/../../update-${data_.updateId}.zip`), path.normalize(process.execpath + `/../../edit-update-${data_.updateId}`), path.normalize(process.execpath + "/../../update-info-82163921.json")], { force: true }).then(() => {
+                            del([path.normalize(process.execPath + "/../../edit-0192837465"), path.normalize(process.execPath + `/../../update-${data_.updateId}.zip`), path.normalize(process.execPath + `/../../edit-update-${data_.updateId}`), path.normalize(process.execPath + "/../../update-info-82163921.json")], { force: true }).then(() => {
                                 count3 = 0
                                 require("electron").dialog.showMessageBox(null, {
                                     noLink: true,
@@ -300,10 +301,10 @@ app.whenReady().then(() => {
             } else if (app.commandLine.hasSwitch("help") || app.commandLine.hasSwitch("h")) {
                 console.log("Warning: --help or --h is not allowed with other switches")
             } else {
-                require("fs").readFile((app.commandLine.getSwitchValue("file") ? app.commandLine.getSwitchValue("file") : app.commandLine.getSwitchValue("f")), {encoding: "utf-8"} ,(error, data) => {
+                require("fs").readFile((app.commandLine.getSwitchValue("file") ? app.commandLine.getSwitchValue("file") : app.commandLine.getSwitchValue("f")), {encoding: "utf-8"}, (error, data) => {
                     //console.log(data)
                     if (error) {
-                        console.log(`Warning: Cannot find file ${value[1]} to load, edit will continue loading with no file loaded.\nDetail are in below:\n${error}`)
+                        console.log(`Warning: Cannot find certain file to load, edit will continue loading with no file loaded.\nDetail are in below:\n${error}`)
                     } else {
                         myWindow.webContents.executeJavaScript(`
                             document.getElementById("editor_input").value = "${data}"
